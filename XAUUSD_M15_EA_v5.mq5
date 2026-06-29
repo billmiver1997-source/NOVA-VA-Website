@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|  XAUUSD M15 Scalper EA v5.0                                      |
+//|  XAUUSD M15 Scalper EA v5.0  [auto-deploy test]                   |
 //|  Strategy: ADX+EMA+RSI+BB+H4 Double Confirm | ATR SL            |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
