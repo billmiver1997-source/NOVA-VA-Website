@@ -12,22 +12,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
       - name: Upload .mq5 files to server staging
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          source: "*.mq5"
-          target: "/tmp/mt5deploy"
+        env:
+          SSHPASS: ${{ secrets.SERVER_PASSWORD }}
+          USER: ${{ secrets.SERVER_USER }}
+          HOST: ${{ secrets.SERVER_HOST }}
+        run: |
+          sshpass -e ssh -o StrictHostKeyChecking=no "$USER@$HOST" "mkdir -p /tmp/mt5deploy"
+          sshpass -e scp -o StrictHostKeyChecking=no *.mq5 "$USER@$HOST:/tmp/mt5deploy/"
 
       - name: Copy from staging to all MT5 Experts folders
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          script: |
+        env:
+          SSHPASS: ${{ secrets.SERVER_PASSWORD }}
+          USER: ${{ secrets.SERVER_USER }}
+          HOST: ${{ secrets.SERVER_HOST }}
+        run: |
+          sshpass -e ssh -o StrictHostKeyChecking=no "$USER@$HOST" bash << 'ENDSSH'
             for dir in \
               "/root/.wine/drive_c/Program Files/Equiti Brokerage (Seychelles) MT5 Terminal/MQL5/Experts" \
               "/root/.wine/drive_c/Program Files/MetaTrader 5/MQL5/Experts" \
@@ -42,3 +45,4 @@ jobs:
             done
             rm -rf /tmp/mt5deploy
             echo "Deploy complete: $(date)"
+          ENDSSH
