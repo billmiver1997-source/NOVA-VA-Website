@@ -1,7 +1,7 @@
 //+------------------------------------------------------------------+
 //|  XAUUSD M15 Scalper EA v5.2                                      |
 //|  Strategy: ADX+EMA+RSI+BB+H4 | ATR SL                           |
-//|  Changes vs v5.1 — deploy test:                                  |
+//|  Changes vs v5.1 — deploy test 2:                                |
 //|  - ADX min 25→18 (catches more setups in moderate trend)         |
 //|  - RSI buy 45-65→40-70, sell 40-60→35-65 (wider window)         |
 //|  - H4 condition: removed price>H4_EMA200 requirement             |
