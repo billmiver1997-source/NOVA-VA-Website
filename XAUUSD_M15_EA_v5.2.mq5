@@ -183,9 +183,9 @@ int GetSignal()
    bool h4Bullish=(h4Fast[0]>h4Slow[0]);
    bool h4Bearish=(h4Fast[0]<h4Slow[0]);
    if(adx<InpADX_Min) return 0;
-   if(h4Bullish&&ema21>ema50&&rsi>InpRSI_BuyMin&&rsi<InpRSI_BuyMax&&
+   if(h4Bullish&&rsi>InpRSI_BuyMin&&rsi<InpRSI_BuyMax&&
       diPlus>diMinus&&price>bbMid&&IsBullishCandle(1)&&IsCooldownOK(1)) return 1;
-   if(h4Bearish&&ema21<ema50&&rsi>InpRSI_SellMin&&rsi<InpRSI_SellMax&&
+   if(h4Bearish&&rsi>InpRSI_SellMin&&rsi<InpRSI_SellMax&&
       diMinus>diPlus&&price<bbMid&&IsBearishCandle(1)&&IsCooldownOK(-1)) return -1;
    return 0;
 }
