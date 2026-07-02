@@ -1,17 +1,13 @@
 //+------------------------------------------------------------------+
-//|  XAUUSD M15 Scalper EA v5.2                                      |
-//|  Strategy: ADX+EMA+RSI+BB+H4 | ATR SL                           |
-//|  Changes vs v5.1 — deploy test 2:                                |
-//|  - ADX min 25→18 (catches more setups in moderate trend)         |
-//|  - RSI buy 45-65→40-70, sell 40-60→35-65 (wider window)         |
-//|  - H4 condition: removed price>H4_EMA200 requirement             |
-//|  - BB guard removed (price<bbUp / price>bbLow dropped)           |
-//|  - Candle body requirement 40%→25%                               |
-//|  - Cooldown 2h→45min (fits 4-5 trades/day target)               |
-//|  - Breakeven trigger at 0.5×ATR (moves SL to entry faster)       |
+//|  XAUUSD M15 Scalper EA v5.3                                      |
+//|  Strategy: ADX+RSI+BB+H4+DI | ATR SL                            |
+//|  Changes vs v5.2:                                                |
+//|  - Removed M15 EMA21>50 from BUY condition (H4+DI sufficient)   |
+//|  - Removed M15 EMA21<50 from SELL condition (H4+DI sufficient)  |
+//|  - Added DI+/DI- to SCAN log for easier diagnosis               |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "5.20"
+#property version   "5.30"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
