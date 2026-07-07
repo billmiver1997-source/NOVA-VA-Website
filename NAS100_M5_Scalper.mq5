@@ -164,23 +164,25 @@ double Lots(double slDist)
 //── SIGNAL ───────────────────────────────────────────────────────────
 int GetSignal()
 {
-   // Trend: EMA13 > EMA34 > EMA50 for uptrend
-   bool trend_up   = e13[1]>e34[1] && e34[1]>e50[1];
-   bool trend_down = e13[1]<e34[1] && e34[1]<e50[1];
+   // Trend: E13>E34 enough — E50 too slow, misses early moves
+   bool trend_up   = e13[1]>e34[1] && e5[1]>e13[1];
+   bool trend_down = e13[1]<e34[1] && e5[1]<e13[1];
 
-   // Entry: EMA5/13 cross OR Stoch cross
+   // Entry: Stoch cross from any level (not just extreme) OR EMA5/13 fresh cross
    bool ema_cross_up = e5[1]>e13[1] && e5[2]<=e13[2];
    bool ema_cross_dn = e5[1]<e13[1] && e5[2]>=e13[2];
-   bool stoch_up = sk[1]>sd[1] && sk[2]<=sd[2] && sk[1]<60;
-   bool stoch_dn = sk[1]<sd[1] && sk[2]>=sd[2] && sk[1]>40;
+   bool stoch_up = sk[1]>sd[1] && sk[2]<=sd[2] && sk[1]<70;
+   bool stoch_dn = sk[1]<sd[1] && sk[2]>=sd[2] && sk[1]>30;
 
    double cClose = iClose(_Symbol,PERIOD_M5,0);
    double cOpen  = iOpen(_Symbol,PERIOD_M5,0);
    bool bullBar = cClose > cOpen;
    bool bearBar = cClose < cOpen;
 
-   if(trend_up   && (ema_cross_up||stoch_up) && rsi[1]>50 && bullBar) return  1;
-   if(trend_down && (ema_cross_dn||stoch_dn) && rsi[1]<50 && bearBar) return -1;
+   // BUY: uptrend aligned + stoch cross or EMA cross + momentum bar
+   if(trend_up   && (stoch_up||ema_cross_up) && rsi[1]>45 && bullBar) return  1;
+   // SELL: downtrend aligned + stoch cross or EMA cross + momentum bar
+   if(trend_down && (stoch_dn||ema_cross_dn) && rsi[1]<55 && bearBar) return -1;
    return 0;
 }
 
