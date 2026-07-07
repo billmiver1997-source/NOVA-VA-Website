@@ -1,78 +1,72 @@
 //+------------------------------------------------------------------+
-//|  XAUUSD M15 Active Scalper v9                                    |
-//|  Απλή, γρήγορη στρατηγική — trades κάθε μέρα                   |
-//|                                                                   |
-//|  BUY:  EMA21>EMA50 + Stoch cross up από <35 + bullish bar       |
-//|  SELL: EMA21<EMA50 + Stoch cross dn από >65 + bearish bar       |
-//|  SL: 1.0×ATR | TP: 1.5×ATR | Risk: 1% | Cooldown: 30min        |
+//|  XAUUSD M15 Mean-Reversion Scalper v9                            |
+//|  Αγόρασε oversold, πούλα overbought — χωρίς trend filter        |
+//|  BUY:  K crosses D από <25 + bullish bar + RSI>15               |
+//|  SELL: K crosses D από >75 + bearish bar + RSI<85               |
+//|  SL: 0.8×ATR | TP: 1.2×ATR | Risk: 1% | Max 3 trades/day        |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "9.00"
+#property version   "9.10"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
 CPositionInfo pos;
 
-input group "=== TREND ==="
-input int    InpFast    = 21;
-input int    InpSlow    = 50;
-
 input group "=== STOCHASTIC ==="
 input int    InpStochK  = 14;
 input int    InpStochD  = 3;
 input int    InpStochSl = 3;
-input double InpOversold    = 50.0;   // cross up below this → BUY
-input double InpOverbought  = 50.0;   // cross dn above this → SELL
+input double InpOversold  = 25.0;
+input double InpOverbought= 75.0;
+
+input group "=== RSI (anti-crash filter) ==="
+input int    InpRSI     = 14;
+input double InpRSImin  = 15.0;
+input double InpRSImax  = 85.0;
 
 input group "=== RISK ==="
 input int    InpATR     = 14;
-input double InpSL      = 1.0;
-input double InpTP      = 1.5;
+input double InpSL      = 0.8;
+input double InpTP      = 1.2;
 input double InpRisk    = 1.0;
-input double InpMaxDD   = 5.0;   // stop day if down 5%
+input double InpMaxDD   = 4.0;
 
 input group "=== FILTERS ==="
 input double InpMaxSpread  = 60.0;
 input int    InpMaxTrades  = 3;
 input int    InpCooldownMin= 20;
-input int    InpStartHour  = 9;   // 09:00 EET
-input int    InpEndHour    = 23;  // 23:00 EET
+input int    InpStartHour  = 9;
+input int    InpEndHour    = 23;
 input int    InpTZOffset   = 3;
 
-int hFast, hSlow, hStoch, hATR;
-double eFast[], eSlow[], sk[], sd[], atr_v[];
+int hStoch, hRSI, hATR;
+double sk[], sd[], rsi[], atr_v[];
 datetime lastTrade=0;
 double   dayEq=0; int lastDay=-1;
+int      dayTrades=0;
 
 int OnInit()
 {
    trade.SetExpertMagicNumber(20250709);
    trade.SetDeviationInPoints(30);
    trade.SetTypeFilling(ORDER_FILLING_IOC);
-   hFast  = iMA(_Symbol,PERIOD_M15,InpFast, 0,MODE_EMA,PRICE_CLOSE);
-   hSlow  = iMA(_Symbol,PERIOD_M15,InpSlow, 0,MODE_EMA,PRICE_CLOSE);
    hStoch = iStochastic(_Symbol,PERIOD_M15,InpStochK,InpStochD,InpStochSl,MODE_SMA,STO_LOWHIGH);
+   hRSI   = iRSI(_Symbol,PERIOD_M15,InpRSI,PRICE_CLOSE);
    hATR   = iATR(_Symbol,PERIOD_M15,InpATR);
-   if(hFast==INVALID_HANDLE||hSlow==INVALID_HANDLE||hStoch==INVALID_HANDLE||hATR==INVALID_HANDLE)
+   if(hStoch==INVALID_HANDLE||hRSI==INVALID_HANDLE||hATR==INVALID_HANDLE)
    { Print("Init failed"); return INIT_FAILED; }
-   ArraySetAsSeries(eFast,true); ArraySetAsSeries(eSlow,true);
-   ArraySetAsSeries(sk,true);    ArraySetAsSeries(sd,true);
-   ArraySetAsSeries(atr_v,true);
-   Print("XAUUSD v9 Active Scalper OK | EMA21/50 + Stoch35/65 | 1%risk");
+   ArraySetAsSeries(sk,true); ArraySetAsSeries(sd,true);
+   ArraySetAsSeries(rsi,true); ArraySetAsSeries(atr_v,true);
+   Print("XAUUSD v9 MeanReversion OK | Stoch25/75 | 3x/day | 20min cd");
    return INIT_SUCCEEDED;
 }
-void OnDeinit(const int r)
-{
-   IndicatorRelease(hFast); IndicatorRelease(hSlow);
-   IndicatorRelease(hStoch); IndicatorRelease(hATR);
-}
+void OnDeinit(const int r){ IndicatorRelease(hStoch); IndicatorRelease(hRSI); IndicatorRelease(hATR); }
 bool Refresh()
 {
-   return CopyBuffer(hFast, 0,0,4,eFast)  >=4
-       && CopyBuffer(hSlow, 0,0,4,eSlow)  >=4
-       && CopyBuffer(hStoch,0,0,4,sk)     >=4
-       && CopyBuffer(hStoch,1,0,4,sd)     >=4
-       && CopyBuffer(hATR,  0,0,4,atr_v)  >=4;
+   return CopyBuffer(hStoch,0,0,4,sk)    >=4
+       && CopyBuffer(hStoch,1,0,4,sd)    >=4
+       && CopyBuffer(hRSI,  0,0,4,rsi)   >=4
+       && CopyBuffer(hATR,  0,0,4,atr_v) >=4;
 }
 bool InSession()
 {
@@ -83,13 +77,9 @@ bool InSession()
    if(dt.day_of_week==5 && dt.hour>=22) return false;
    return dt.hour>=InpStartHour && dt.hour<InpEndHour;
 }
-int CountMine()
-{
-   int c=0;
-   for(int i=0;i<PositionsTotal();i++)
-      if(pos.SelectByIndex(i)&&pos.Magic()==20250709&&pos.Symbol()==_Symbol) c++;
-   return c;
-}
+int CountMine(){ int c=0; for(int i=0;i<PositionsTotal();i++) if(pos.SelectByIndex(i)&&pos.Magic()==20250709&&pos.Symbol()==_Symbol) c++; return c; }
+bool HasBuy(){ for(int i=0;i<PositionsTotal();i++) if(pos.SelectByIndex(i)&&pos.Magic()==20250709&&pos.Symbol()==_Symbol&&pos.PositionType()==POSITION_TYPE_BUY) return true; return false; }
+bool HasSell(){ for(int i=0;i<PositionsTotal();i++) if(pos.SelectByIndex(i)&&pos.Magic()==20250709&&pos.Symbol()==_Symbol&&pos.PositionType()==POSITION_TYPE_SELL) return true; return false; }
 double Lots(double slD)
 {
    if(slD<=0) return SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_MIN);
@@ -107,21 +97,14 @@ void TrailStop()
 {
    for(int i=PositionsTotal()-1;i>=0;i--)
    {
-      if(!pos.SelectByIndex(i)) continue;
-      if(pos.Magic()!=20250709||pos.Symbol()!=_Symbol) continue;
+      if(!pos.SelectByIndex(i)||pos.Magic()!=20250709||pos.Symbol()!=_Symbol) continue;
       double op=pos.PriceOpen(),sl=pos.StopLoss(),tp=pos.TakeProfit(),av=atr_v[0];
       if(pos.PositionType()==POSITION_TYPE_BUY)
-      {
-         double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
-         if(bid>=op+av*0.7 && sl<op)
-            trade.PositionModify(pos.Ticket(),NormalizeDouble(op+_Point,_Digits),tp);
-      }
+      { double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
+        if(bid>=op+av*0.5 && sl<op) trade.PositionModify(pos.Ticket(),NormalizeDouble(op+_Point,_Digits),tp); }
       else
-      {
-         double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
-         if(ask<=op-av*0.7 && sl>op)
-            trade.PositionModify(pos.Ticket(),NormalizeDouble(op-_Point,_Digits),tp);
-      }
+      { double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
+        if(ask<=op-av*0.5 && sl>op) trade.PositionModify(pos.Ticket(),NormalizeDouble(op-_Point,_Digits),tp); }
    }
 }
 void OnTick()
@@ -132,49 +115,50 @@ void OnTick()
    if(!Refresh()) return;
 
    MqlDateTime dt; TimeToStruct(TimeGMT(),dt);
-   if(dt.day!=lastDay){ dayEq=AccountInfoDouble(ACCOUNT_EQUITY); lastDay=dt.day; }
+   if(dt.day!=lastDay){ dayEq=AccountInfoDouble(ACCOUNT_EQUITY); lastDay=dt.day; dayTrades=0; }
 
    TrailStop();
 
-   if(!InSession()){ return; }
+   if(!InSession()) return;
 
    double spread=SymbolInfoInteger(_Symbol,SYMBOL_SPREAD)*_Point;
-   if(spread>InpMaxSpread*_Point){ Print("SKIP spread=",DoubleToString(spread/_Point,0)); return; }
+   if(spread>InpMaxSpread*_Point) return;
 
-   // Daily DD guard
    if(InpMaxDD>0 && dayEq>0 && AccountInfoDouble(ACCOUNT_EQUITY)<dayEq*(1-InpMaxDD/100))
    { Print("STOP: daily DD limit"); return; }
 
-   if(CountMine()>=InpMaxTrades) return;
+   if(dayTrades>=InpMaxTrades) return;
    if(lastTrade>0 && (TimeCurrent()-lastTrade)<(datetime)(InpCooldownMin*60)) return;
 
-   // Signal
-   bool crossUp = sk[1]>sd[1] && sk[2]<=sd[2];
-   bool crossDn = sk[1]<sd[1] && sk[2]>=sd[2];
+   bool crossUp = sk[1]>sd[1] && sk[2]<=sd[2] && sk[1]<InpOversold;
+   bool crossDn = sk[1]<sd[1] && sk[2]>=sd[2] && sk[1]>InpOverbought;
    double cC=iClose(_Symbol,PERIOD_M15,0), cO=iOpen(_Symbol,PERIOD_M15,0);
 
-   Print("SCAN | EMA21=",DoubleToString(eFast[1],1)," EMA50=",DoubleToString(eSlow[1],1),
-         " K=",DoubleToString(sk[1],1)," D=",DoubleToString(sd[1],1),
-         " Cross=",crossUp?"UP":crossDn?"DN":"–",
-         " Trend=",eFast[1]>eSlow[1]?"UP":"DN");
+   Print("SCAN | K=",DoubleToString(sk[1],1)," D=",DoubleToString(sd[1],1),
+         " RSI=",DoubleToString(rsi[1],1),
+         " Cross=",crossUp?"BUY↑":crossDn?"SELL↓":"–",
+         " Day=",dayTrades,"/",InpMaxTrades);
 
    double av=atr_v[1];
-   if(eFast[1]>eSlow[1] && crossUp && sk[1]<InpOversold && cC>cO)
+
+   if(crossUp && rsi[1]>InpRSImin && cC>cO && !HasBuy())
    {
       double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
       double sl=NormalizeDouble(ask-av*InpSL,_Digits);
       double tp=NormalizeDouble(ask+av*InpTP,_Digits);
       double lots=Lots(ask-sl);
-      if(trade.Buy(lots,_Symbol,ask,sl,tp,"v9_BUY"))
-      { lastTrade=TimeCurrent(); Print("BUY v9 | lots=",lots," sl=",sl," tp=",tp," K=",DoubleToString(sk[1],1)); }
+      if(trade.Buy(lots,_Symbol,ask,sl,tp,"XAU_BUY"))
+      { lastTrade=TimeCurrent(); dayTrades++;
+        Print(">>> BUY | lots=",lots," sl=",sl," tp=",tp," K=",DoubleToString(sk[1],1)); }
    }
-   else if(eFast[1]<eSlow[1] && crossDn && sk[1]>InpOverbought && cC<cO)
+   else if(crossDn && rsi[1]<InpRSImax && cC<cO && !HasSell())
    {
       double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
       double sl=NormalizeDouble(bid+av*InpSL,_Digits);
       double tp=NormalizeDouble(bid-av*InpTP,_Digits);
       double lots=Lots(sl-bid);
-      if(trade.Sell(lots,_Symbol,bid,sl,tp,"v9_SELL"))
-      { lastTrade=TimeCurrent(); Print("SELL v9 | lots=",lots," sl=",sl," tp=",tp," K=",DoubleToString(sk[1],1)); }
+      if(trade.Sell(lots,_Symbol,bid,sl,tp,"XAU_SELL"))
+      { lastTrade=TimeCurrent(); dayTrades++;
+        Print(">>> SELL | lots=",lots," sl=",sl," tp=",tp," K=",DoubleToString(sk[1],1)); }
    }
 }
