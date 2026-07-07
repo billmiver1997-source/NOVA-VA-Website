@@ -50,7 +50,7 @@ input double InpRisk     = 1.0;    // % equity per trade
 input double InpMaxDailyLossPct = 2.5; // stop day if down 2.5%
 
 input group "=== FILTERS ==="
-input double InpMaxSpread   = 50.0;   // max spread in points
+input double InpMaxSpread   = 200.0;  // max spread in points (NAS100 normal = 100-150)
 input int    InpMaxPerDay   = 2;      // max 2 trades/day
 input int    InpCooldownBars= 6;      // 6 bars = 30 min cooldown
 input int    InpStartHourUTC= 13;     // NY session open
