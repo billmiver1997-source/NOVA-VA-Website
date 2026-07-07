@@ -21,8 +21,8 @@ input group "=== STOCHASTIC ==="
 input int    InpStochK  = 14;
 input int    InpStochD  = 3;
 input int    InpStochSl = 3;
-input double InpOversold    = 35.0;
-input double InpOverbought  = 65.0;
+input double InpOversold    = 50.0;   // cross up below this → BUY
+input double InpOverbought  = 50.0;   // cross dn above this → SELL
 
 input group "=== RISK ==="
 input int    InpATR     = 14;
