@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NOVA VA — Contact</title>
+<meta name="description" content="Get in touch to launch your own branded Telegram trading platform, or try the live demo bot first.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NOVA VA">
+<meta property="og:title" content="NOVA VA — Contact">
+<meta property="og:description" content="Get in touch to launch your own branded Telegram trading platform, or try the live demo bot first.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NOVA VA — Contact">
+<meta name="twitter:description" content="Get in touch to launch your own branded Telegram trading platform, or try the live demo bot first.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -60,7 +68,16 @@
   .nav-cta{ background:var(--gold); color:#141414 !important; padding:9px 18px; border-radius:3px; font-size:13.5px; font-weight:600; }
   .nav-cta:hover{ background:var(--gold-bright); }
   .nav-mobile-hide{ display:flex; }
-  @media(max-width:760px){ .nav-mobile-hide{ display:none; } }
+  .nav-toggle{ display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:6px; width:34px; height:34px; align-items:center; justify-content:center; }
+  .nav-toggle .bar{ width:20px; height:2px; background:var(--text); transition:transform 0.2s, opacity 0.2s; }
+  .nav-toggle.open .bar:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+  .nav-toggle.open .bar:nth-child(2){ opacity:0; }
+  .nav-toggle.open .bar:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+  .nav-mobile-panel{ display:none; flex-direction:column; padding:6px 32px 18px; border-bottom:1px solid var(--border-soft); background:var(--bg); }
+  .nav-mobile-panel a{ padding:13px 0; font-size:15px; color:var(--text-muted); border-bottom:1px solid var(--border-soft); }
+  .nav-mobile-panel a:last-child{ border-bottom:none; }
+  .nav-mobile-panel.open{ display:flex; }
+  @media(max-width:760px){ .nav-mobile-hide{ display:none; } .nav-toggle{ display:flex; } }
 
   /* Hero */
   .hero{ position:relative; padding:88px 0 110px; background:radial-gradient(ellipse 900px 500px at 78% -10%, rgba(201,169,97,0.10), transparent), var(--bg); overflow:hidden; border-bottom:1px solid var(--border-soft); }
@@ -209,6 +226,13 @@
   .trust-box{ border:1px solid var(--border); border-left:3px solid var(--gold); border-radius:6px; padding:24px 26px; background:var(--surface); margin-bottom:28px; }
   .trust-box p{ font-size:14.5px; color:var(--text); font-style:italic; }
   .trust-note{ color:var(--text-muted); font-size:15px; max-width:640px; }
+  .faq{ max-width:760px; margin:0 auto; }
+  .faq details{ border-bottom:1px solid var(--border-soft); padding:18px 0; }
+  .faq summary{ cursor:pointer; font-weight:600; font-size:15.5px; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:16px; color:var(--text); }
+  .faq summary::-webkit-details-marker{ display:none; }
+  .faq summary::after{ content:'+'; font-size:20px; color:var(--gold); flex-shrink:0; }
+  .faq details[open] summary::after{ content:'−'; }
+  .faq details p{ margin-top:12px; color:var(--text-muted); font-size:14.5px; }
 
   /* Contact / CTA */
   .cta-section{ text-align:center; border-bottom:none; padding:100px 0 110px; }
@@ -264,12 +288,24 @@
       <div class="nav-mobile-hide" style="gap:34px; display:flex;">
         <a href="platform.html">Platform</a>
         <a href="bots-channels.html">Bots &amp; Channels</a>
+        <a href="pricing.html">Pricing</a>
         <a href="contact.html">Contact</a>
       </div>
       <a href="contact.html" class="nav-cta">Request a Demo</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" onclick="toggleNavMenu(this)">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
     </div>
   </div>
 </nav>
+<div class="nav-mobile-panel" id="navMobilePanel">
+  <a href="platform.html">Platform</a>
+  <a href="bots-channels.html">Bots &amp; Channels</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="contact.html">Contact</a>
+</div>
 
 <section id="trust">
   <div class="wrap">
@@ -282,6 +318,41 @@
         <p>A disclaimer accompanies every signal, analysis, and welcome message: "Not financial advice. Trading involves significant risk of loss."</p>
       </div>
       <p class="trust-note">This overview is a demo, built to show you what's possible. Every tool can be adjusted, removed, or replaced, and new tools can be added, based on a conversation about what fits your brand and your audience best.</p>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head fade-in" style="margin-bottom:32px;">
+      <span class="kicker">Frequently Asked</span>
+      <h2 style="font-size:26px;">Answers before you reach out.</h2>
+    </div>
+    <div class="faq fade-in">
+      <details>
+        <summary>What if I already use another provider or have my own bot?</summary>
+        <p>We build alongside or replace whatever you currently use. Existing communities and channels can be migrated in, and nothing needs to change on your members' side.</p>
+      </details>
+      <details>
+        <summary>How fast can this go live?</summary>
+        <p>Once your setup deposit is received, delivery typically takes 3–5 business days. You'll see your branded platform working before the remaining balance is due.</p>
+      </details>
+      <details>
+        <summary>Who owns the bot and the data?</summary>
+        <p>The bot(s) run on our infrastructure and remain our property, but everything your members do stays visible to you. You always have a full, real-time view of your own audience.</p>
+      </details>
+      <details>
+        <summary>Can I customize or add features later?</summary>
+        <p>Yes. Bug fixes are always free, and your first several customization requests after delivery are free too. Anything beyond that is scoped and confirmed with you before we start.</p>
+      </details>
+      <details>
+        <summary>What if I want to stop?</summary>
+        <p>Either side can end the agreement with 14 days' written notice. There's no lock-in beyond that.</p>
+      </details>
+      <details>
+        <summary>Is this safe to show my audience?</summary>
+        <p>Every signal, analysis, and message includes a clear disclaimer: "Not financial advice. Trading involves significant risk of loss." The platform is built to be shown to your audience with full transparency.</p>
+      </details>
     </div>
   </div>
 </section>
@@ -324,6 +395,11 @@
       <span>Email: <a href="mailto:novavaglobal@gmail.com">novavaglobal@gmail.com</a></span>
       <span>Demo: <a href="https://t.me/TradingNovaVAbot">t.me/TradingNovaVAbot</a></span>
     </div>
+    <div class="contact-details" style="margin-top:16px;">
+      <span>Operations — Vasileios Voulkos</span>
+      <span>Email: <a href="mailto:vasilisvoulkos@gmail.com">vasilisvoulkos@gmail.com</a></span>
+      <span>WhatsApp &amp; Telegram: <a href="https://wa.me/971501607503">+971 50 160 7503</a></span>
+    </div>
   </div>
 </section>
 
@@ -334,12 +410,21 @@
     <div class="footer-links">
       <a href="platform.html">Platform</a>
       <a href="bots-channels.html">Bots &amp; Channels</a>
+      <a href="pricing.html">Pricing</a>
       <a href="contact.html">Contact</a>
     </div>
   </div>
 </footer>
 
 <script>
+function toggleNavMenu(btn){
+  btn.classList.toggle('open');
+  var panel = document.getElementById('navMobilePanel');
+  if(panel){ panel.classList.toggle('open'); }
+  var expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', String(!expanded));
+}
+
   const pairs = [
     {p:'XAU/USD', v:'2,394.12', d:'up', c:'+0.42%'},
     {p:'EUR/USD', v:'1.0862', d:'down', c:'-0.11%'},
@@ -375,17 +460,33 @@
         return;
       }
 
+      if (payload.website) {
+        // Honeypot tripped — silently pretend success, do not send anywhere.
+        status.textContent = "Message sent — we'll get back to you shortly.";
+        status.classList.add('success');
+        contactForm.reset();
+        return;
+      }
+
       const originalLabel = btn.textContent;
       btn.disabled = true;
       btn.textContent = 'Sending…';
 
       try {
-        const res = await fetch('/api/contact', {
+        const res = await fetch('https://formsubmit.co/ajax/novavaglobal@gmail.com', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            name: payload.name,
+            contact: payload.contact,
+            message: payload.message,
+            _subject: 'New message from the NOVA VA website'
+          })
         });
-        if (!res.ok) throw new Error('Request failed');
+        const data = await res.json().catch(() => null);
+        if (!res.ok || !data || data.success === false || data.success === 'false') {
+          throw new Error((data && data.message) || 'Request failed');
+        }
         status.textContent = "Message sent — we'll get back to you shortly.";
         status.classList.add('success');
         contactForm.reset();

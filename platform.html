@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NOVA VA — Platform</title>
+<meta name="description" content="Everything included in your white-label Telegram trading platform: education, live market data, news, calendar alerts, and trade journal tools — all under your own brand.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NOVA VA">
+<meta property="og:title" content="NOVA VA — Platform">
+<meta property="og:description" content="Everything included in your white-label Telegram trading platform: education, live market data, news, calendar alerts, and trade journal tools — all under your own brand.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NOVA VA — Platform">
+<meta name="twitter:description" content="Everything included in your white-label Telegram trading platform: education, live market data, news, calendar alerts, and trade journal tools — all under your own brand.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -60,7 +68,16 @@
   .nav-cta{ background:var(--gold); color:#141414 !important; padding:9px 18px; border-radius:3px; font-size:13.5px; font-weight:600; }
   .nav-cta:hover{ background:var(--gold-bright); }
   .nav-mobile-hide{ display:flex; }
-  @media(max-width:760px){ .nav-mobile-hide{ display:none; } }
+  .nav-toggle{ display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:6px; width:34px; height:34px; align-items:center; justify-content:center; }
+  .nav-toggle .bar{ width:20px; height:2px; background:var(--text); transition:transform 0.2s, opacity 0.2s; }
+  .nav-toggle.open .bar:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+  .nav-toggle.open .bar:nth-child(2){ opacity:0; }
+  .nav-toggle.open .bar:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+  .nav-mobile-panel{ display:none; flex-direction:column; padding:6px 32px 18px; border-bottom:1px solid var(--border-soft); background:var(--bg); }
+  .nav-mobile-panel a{ padding:13px 0; font-size:15px; color:var(--text-muted); border-bottom:1px solid var(--border-soft); }
+  .nav-mobile-panel a:last-child{ border-bottom:none; }
+  .nav-mobile-panel.open{ display:flex; }
+  @media(max-width:760px){ .nav-mobile-hide{ display:none; } .nav-toggle{ display:flex; } }
 
   /* Hero */
   .hero{ position:relative; padding:88px 0 110px; background:radial-gradient(ellipse 900px 500px at 78% -10%, rgba(201,169,97,0.10), transparent), var(--bg); overflow:hidden; border-bottom:1px solid var(--border-soft); }
@@ -264,12 +281,24 @@
       <div class="nav-mobile-hide" style="gap:34px; display:flex;">
         <a href="platform.html">Platform</a>
         <a href="bots-channels.html">Bots &amp; Channels</a>
+        <a href="pricing.html">Pricing</a>
         <a href="contact.html">Contact</a>
       </div>
       <a href="contact.html" class="nav-cta">Request a Demo</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" onclick="toggleNavMenu(this)">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
     </div>
   </div>
 </nav>
+<div class="nav-mobile-panel" id="navMobilePanel">
+  <a href="platform.html">Platform</a>
+  <a href="bots-channels.html">Bots &amp; Channels</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="contact.html">Contact</a>
+</div>
 
 <section id="platform">
   <div class="wrap">
@@ -324,12 +353,21 @@
     <div class="footer-links">
       <a href="platform.html">Platform</a>
       <a href="bots-channels.html">Bots &amp; Channels</a>
+      <a href="pricing.html">Pricing</a>
       <a href="contact.html">Contact</a>
     </div>
   </div>
 </footer>
 
 <script>
+function toggleNavMenu(btn){
+  btn.classList.toggle('open');
+  var panel = document.getElementById('navMobilePanel');
+  if(panel){ panel.classList.toggle('open'); }
+  var expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', String(!expanded));
+}
+
   const pairs = [
     {p:'XAU/USD', v:'2,394.12', d:'up', c:'+0.42%'},
     {p:'EUR/USD', v:'1.0862', d:'down', c:'-0.11%'},
