@@ -33,8 +33,8 @@ input double InpMaxDD   = 5.0;   // stop day if down 5%
 
 input group "=== FILTERS ==="
 input double InpMaxSpread  = 60.0;
-input int    InpMaxTrades  = 2;
-input int    InpCooldownMin= 30;
+input int    InpMaxTrades  = 3;
+input int    InpCooldownMin= 20;
 input int    InpStartHour  = 9;   // 09:00 EET
 input int    InpEndHour    = 23;  // 23:00 EET
 input int    InpTZOffset   = 3;
