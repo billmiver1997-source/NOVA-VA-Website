@@ -132,7 +132,6 @@ void OnTick()
 
    bool crossUp = sk[1]>sd[1] && sk[2]<=sd[2] && sk[1]<InpOversold;
    bool crossDn = sk[1]<sd[1] && sk[2]>=sd[2] && sk[1]>InpOverbought;
-   double cC=iClose(_Symbol,PERIOD_M15,0), cO=iOpen(_Symbol,PERIOD_M15,0);
 
    Print("SCAN | K=",DoubleToString(sk[1],1)," D=",DoubleToString(sd[1],1),
          " RSI=",DoubleToString(rsi[1],1),
@@ -141,7 +140,7 @@ void OnTick()
 
    double av=atr_v[1];
 
-   if(crossUp && rsi[1]>InpRSImin && cC>cO && !HasBuy())
+   if(crossUp && rsi[1]>InpRSImin && !HasBuy())
    {
       double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
       double sl=NormalizeDouble(ask-av*InpSL,_Digits);
@@ -151,7 +150,7 @@ void OnTick()
       { lastTrade=TimeCurrent(); dayTrades++;
         Print(">>> BUY | lots=",lots," sl=",sl," tp=",tp," K=",DoubleToString(sk[1],1)); }
    }
-   else if(crossDn && rsi[1]<InpRSImax && cC<cO && !HasSell())
+   else if(crossDn && rsi[1]<InpRSImax && !HasSell())
    {
       double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
       double sl=NormalizeDouble(bid+av*InpSL,_Digits);
