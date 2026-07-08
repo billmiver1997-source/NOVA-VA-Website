@@ -149,6 +149,9 @@ void OnTick()
       if(trade.Buy(lots,_Symbol,ask,sl,tp,"XAU_BUY"))
       { lastTrade=TimeCurrent(); dayTrades++;
         Print(">>> BUY | lots=",lots," sl=",sl," tp=",tp," K=",DoubleToString(sk[1],1)); }
+      else
+        Print("!!! BUY FAILED | retcode=",trade.ResultRetcode()," ",trade.ResultRetcodeDescription(),
+              " | lots=",lots," ask=",ask," sl=",sl," tp=",tp," stops_level=",(long)SymbolInfoInteger(_Symbol,SYMBOL_TRADE_STOPS_LEVEL));
    }
    else if(crossDn && rsi[1]<InpRSImax && !HasSell())
    {
@@ -159,5 +162,8 @@ void OnTick()
       if(trade.Sell(lots,_Symbol,bid,sl,tp,"XAU_SELL"))
       { lastTrade=TimeCurrent(); dayTrades++;
         Print(">>> SELL | lots=",lots," sl=",sl," tp=",tp," K=",DoubleToString(sk[1],1)); }
+      else
+        Print("!!! SELL FAILED | retcode=",trade.ResultRetcode()," ",trade.ResultRetcodeDescription(),
+              " | lots=",lots," bid=",bid," sl=",sl," tp=",tp," stops_level=",(long)SymbolInfoInteger(_Symbol,SYMBOL_TRADE_STOPS_LEVEL));
    }
 }
