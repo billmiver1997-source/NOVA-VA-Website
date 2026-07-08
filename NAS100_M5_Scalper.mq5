@@ -16,8 +16,8 @@ input group "=== STOCHASTIC ==="
 input int    InpStochK  = 8;
 input int    InpStochD  = 3;
 input int    InpStochSl = 3;
-input double InpOversold  = 25.0;
-input double InpOverbought= 75.0;
+input double InpOversold  = 40.0;
+input double InpOverbought= 60.0;
 
 input group "=== RSI (anti-crash filter) ==="
 input int    InpRSI     = 14;
