@@ -48,7 +48,7 @@
   .wrap{ max-width:1180px; margin:0 auto; padding:0 32px; }
   @media(max-width:640px){ .wrap{ padding:0 20px; } }
   @media (prefers-reduced-motion: reduce){
-    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
+    *:not(.ticker-track){ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
   }
 
   /* Ticker */
