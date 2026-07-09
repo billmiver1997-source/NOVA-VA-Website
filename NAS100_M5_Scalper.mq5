@@ -106,10 +106,12 @@ void TrailStop()
       double op=pos.PriceOpen(),sl=pos.StopLoss(),tp=pos.TakeProfit(),av=atr_v[0];
       if(pos.PositionType()==POSITION_TYPE_BUY)
       { double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
-        if(bid>=op+av*0.4 && sl<op) trade.PositionModify(pos.Ticket(),NormalizeDouble(op+_Point,_Digits),tp); }
+        double lockPrice=NormalizeDouble(op+av*InpTrailLock,_Digits);
+        if(bid>=op+av*InpTrailTrigger && sl<lockPrice) trade.PositionModify(pos.Ticket(),lockPrice,tp); }
       else
       { double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
-        if(ask<=op-av*0.4 && sl>op) trade.PositionModify(pos.Ticket(),NormalizeDouble(op-_Point,_Digits),tp); }
+        double lockPrice=NormalizeDouble(op-av*InpTrailLock,_Digits);
+        if(ask<=op-av*InpTrailTrigger && sl>lockPrice) trade.PositionModify(pos.Ticket(),lockPrice,tp); }
    }
 }
 void OnTick()
