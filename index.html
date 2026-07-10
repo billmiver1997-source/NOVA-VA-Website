@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('nova-va-theme');
+    if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); }
+  }catch(e){}
+})();
+</script>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-42FKMK0T2G"></script>
 <script>
@@ -34,6 +43,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
+    --bg:#1c1710;
+    --bg-alt:#241d14;
+    --surface:#2a2118;
+    --surface-2:#302619;
+    --border:#4a3d28;
+    --border-soft:#362c1d;
+    --gold:#d9b56b;
+    --gold-bright:#e8c785;
+    --green:#4ecb7e;
+    --green-dim:#1f3d2a;
+    --red:#e3695a;
+    --text:#f1e8d6;
+    --text-muted:#c4b795;
+    --text-faint:#8f8567;
+  }
+  nav{ background:rgba(28,23,16,0.88) !important; }
+  .logo img, .brand-mark, .footer-mark, .header-mark{ filter:brightness(0) invert(1) !important; }
+
+  :root[data-theme="light"]{
     --bg:#f1e8d6;
     --bg-alt:#eadfc4;
     --surface:#faf3e4;
@@ -47,27 +75,17 @@
     --red:#a3392c;
     --text:#2c2213;
     --text-muted:#6b5c40;
+    --text-faint:#948968;
   }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#1c1710;
-      --bg-alt:#241d14;
-      --surface:#2a2118;
-      --surface-2:#302619;
-      --border:#4a3d28;
-      --border-soft:#362c1d;
-      --gold:#d9b56b;
-      --gold-bright:#e8c785;
-      --green:#4ecb7e;
-      --green-dim:#1f3d2a;
-      --red:#e3695a;
-      --text:#f1e8d6;
-      --text-muted:#c4b795;
-      --text-faint:#8f8567;
-    }
-    nav{ background:rgba(28,23,16,0.88) !important; }
-    .logo img, .brand-mark, .footer-mark, .header-mark{ filter:brightness(0) invert(1) !important; }
-  }
+  :root[data-theme="light"] nav{ background:rgba(241,232,214,0.88) !important; }
+  :root[data-theme="light"] .logo img, :root[data-theme="light"] .brand-mark, :root[data-theme="light"] .footer-mark, :root[data-theme="light"] .header-mark{ filter:none !important; }
+
+  .theme-toggle{ background:none; border:1px solid var(--border); border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text); flex-shrink:0; transition:border-color 0.2s ease, transform 0.2s ease; }
+  .theme-toggle:hover{ border-color:var(--gold); transform:translateY(-1px); }
+  .theme-toggle svg{ width:17px; height:17px; }
+  .theme-toggle .icon-moon{ display:none; }
+  :root[data-theme="light"] .theme-toggle .icon-sun{ display:none; }
+  :root[data-theme="light"] .theme-toggle .icon-moon{ display:block; }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
   html{ scroll-behavior:smooth; }
@@ -320,6 +338,10 @@
         <a href="contact.html">Contact</a>
       </div>
       <a href="contact.html" class="nav-cta">Request a Demo</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme" onclick="toggleTheme()">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
       <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" onclick="toggleNavMenu(this)">
         <span class="bar"></span>
         <span class="bar"></span>
@@ -726,6 +748,21 @@
 </footer>
 
 <script>
+function toggleTheme(){
+  var root = document.documentElement;
+  var isLight = root.getAttribute('data-theme') === 'light';
+  var scheme = document.querySelector('meta[name="color-scheme"]');
+  if(isLight){
+    root.removeAttribute('data-theme');
+    try{ localStorage.setItem('nova-va-theme','dark'); }catch(e){}
+    if(scheme){ scheme.setAttribute('content','dark'); }
+  } else {
+    root.setAttribute('data-theme','light');
+    try{ localStorage.setItem('nova-va-theme','light'); }catch(e){}
+    if(scheme){ scheme.setAttribute('content','light'); }
+  }
+}
+
 function toggleNavMenu(btn){
   btn.classList.toggle('open');
   var panel = document.getElementById('navMobilePanel');
