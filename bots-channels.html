@@ -142,8 +142,10 @@
     pointer-events:none; z-index:-1;
   }
   .nav-links{ display:flex; gap:34px; align-items:center; }
-  .nav-links a{ font-size:14px; color:var(--text-muted); font-weight:500; transition:color 0.2s; }
+  .nav-links a{ font-size:14px; color:var(--text-muted); font-weight:500; transition:color 0.2s; position:relative; }
   .nav-links a:hover{ color:var(--text); }
+  .nav-links a::after{ content:''; position:absolute; left:0; right:100%; bottom:-4px; height:1px; background:var(--gold); transition:right 0.25s ease; }
+  .nav-links a:hover::after{ right:0; }
   .nav-cta{ background:var(--gold); color:#141414 !important; padding:9px 18px; border-radius:3px; font-size:13.5px; font-weight:600; transition:background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease; }
   .nav-cta:hover{ background:var(--gold-bright); transform:translateY(-2px) scale(1.04); box-shadow:0 8px 22px rgba(201,169,97,0.4); }
   .nav-mobile-hide{ display:flex; }
@@ -262,8 +264,8 @@
   .feature-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border-soft); border:1px solid var(--border-soft); border-radius:10px; overflow:hidden; }
   @media(max-width:900px){ .feature-grid{ grid-template-columns:repeat(2,1fr); } }
   @media(max-width:640px){ .feature-grid{ grid-template-columns:1fr; } }
-  .feature-cell{ background:var(--bg); padding:30px 26px; position:relative; transition:background 0.3s ease; }
-  .feature-cell:hover{ background:var(--surface-2); }
+  .feature-cell{ background:var(--bg); padding:30px 26px; position:relative; transition:background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; }
+  .feature-cell:hover{ background:var(--surface-2); transform:translateY(-4px); box-shadow:0 14px 30px rgba(20,15,8,0.16); z-index:1; }
   .feature-cell.addon{ background:var(--bg-alt); }
   .feature-cell .tag{ font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:0.05em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; display:inline-block; }
   .feature-cell h3{ font-size:17.5px; margin-bottom:9px; font-weight:600; font-family:'Inter'; }
@@ -278,8 +280,8 @@
   .bot-head p{ color:var(--text-muted); font-size:13.5px; margin-top:3px; }
   .bot-features{ display:grid; grid-template-columns:repeat(2,1fr); }
   @media(max-width:760px){ .bot-features{ grid-template-columns:1fr; } }
-  .bot-feature{ padding:20px 26px; border-top:1px solid var(--border-soft); border-left:1px solid var(--border-soft); transition:background 0.3s ease; }
-  .bot-feature:hover{ background:rgba(201,169,97,0.06); }
+  .bot-feature{ padding:20px 26px; border-top:1px solid var(--border-soft); border-left:1px solid var(--border-soft); transition:background 0.3s ease, border-left-color 0.3s ease; }
+  .bot-feature:hover{ background:rgba(201,169,97,0.06); border-left-color:var(--gold); }
   .bot-feature:nth-child(2n+1){ border-left:none; }
   @media(max-width:760px){ .bot-feature{ border-left:none !important; } }
   .bot-feature h4{ font-size:14.5px; font-weight:600; margin-bottom:5px; font-family:'JetBrains Mono', monospace; color:var(--gold-bright); }
@@ -291,7 +293,9 @@
   .channel-card{ border:1px solid var(--border); border-radius:10px; padding:26px 24px; background:linear-gradient(180deg, var(--surface), var(--bg)); transition:transform 0.3s ease, box-shadow 0.3s ease; }
   .channel-card:hover{ transform:translateY(-5px); box-shadow:0 16px 34px rgba(44,34,19,0.12); }
   .channel-card .icon{ width:34px; height:34px; border-radius:7px; background:var(--green-dim); display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
-  .channel-card .icon span{ width:7px; height:7px; border-radius:50%; background:var(--green); }
+  .channel-card .icon span{ width:7px; height:7px; border-radius:50%; background:var(--green); position:relative; }
+  .channel-card .icon span::after{ content:''; position:absolute; inset:-6px; border-radius:50%; border:1.5px solid var(--green); opacity:0; animation:live-pulse 2.4s ease-out infinite; }
+  @keyframes live-pulse{ 0%{ opacity:0.55; transform:scale(0.4); } 70%{ opacity:0; transform:scale(1.6); } 100%{ opacity:0; transform:scale(1.6); } }
   .channel-card h4{ font-size:16px; margin-bottom:8px; font-family:'Inter'; font-weight:600; }
   .channel-card p{ font-size:13.5px; color:var(--text-muted); }
 
