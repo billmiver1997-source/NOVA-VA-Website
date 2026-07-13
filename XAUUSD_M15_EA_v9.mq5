@@ -41,8 +41,12 @@ input int    InpStartHour  = 9;
 input int    InpEndHour    = 23;
 input int    InpTZOffset   = 3;
 
-int hStoch, hRSI, hATR;
-double sk[], sd[], rsi[], atr_v[];
+input group "=== ADX (light trend filter) ==="
+input int    InpADXPeriod  = 14;
+input double InpADXMax     = 35.0;   // skip counter-trend entries when trend this strong
+
+int hStoch, hRSI, hATR, hADX;
+double sk[], sd[], rsi[], atr_v[], adx[];
 datetime lastTrade=0;
 double   dayEq=0; int lastDay=-1;
 int      dayTrades=0;
