@@ -1,12 +1,12 @@
 //+------------------------------------------------------------------+
 //|  XAUUSD M15 Mean-Reversion Scalper v9                            |
-//|  Αγόρασε oversold, πούλα overbought — χωρίς trend filter        |
+//|  Αγόρασε oversold, πούλα overbought — ελαφρύ ADX trend filter   |
 //|  BUY:  K crosses D από <25 + bullish bar + RSI>15               |
 //|  SELL: K crosses D από >75 + bearish bar + RSI<85               |
 //|  SL: 0.8×ATR | TP: 1.2×ATR | Risk: 1% | Max 3 trades/day        |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "9.20"
+#property version   "9.30"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
