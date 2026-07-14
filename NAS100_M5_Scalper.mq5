@@ -88,6 +88,21 @@ bool InSession()
    if(dt.day_of_week==5 && dt.hour>=22) return false;
    return dt.hour>=InpStartHour && dt.hour<InpEndHour;
 }
+bool NewsBlackout()
+{
+   if(!InpNewsFilterOn) return false;
+   datetime from = TimeCurrent() - InpNewsMinutesAfter*60;
+   datetime to   = TimeCurrent() + InpNewsMinutesBefore*60;
+   MqlCalendarValue values[];
+   int n = CalendarValueHistory(values, from, to, NULL, InpNewsCurrency);
+   for(int i=0;i<n;i++)
+   {
+      MqlCalendarEvent ev;
+      if(CalendarEventById(values[i].event_id, ev) && ev.importance==CALENDAR_IMPORTANCE_HIGH)
+         return true;
+   }
+   return false;
+}
 int CountMine()
 {
    int c=0;
