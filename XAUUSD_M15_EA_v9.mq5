@@ -1,12 +1,16 @@
 //+------------------------------------------------------------------+
 //|  XAUUSD M15 Mean-Reversion Scalper v9                            |
-//|  Αγόρασε oversold, πούλα overbought — ελαφρύ ADX trend filter   |
+//|  Αγόρασε oversold, πούλα overbought — ADAPTIVE ADX trend filter |
 //|  BUY:  K crosses D από <25 + bullish bar + RSI>15               |
 //|  SELL: K crosses D από >75 + bearish bar + RSI<85               |
 //|  SL: 0.8×ATR | TP: 1.2×ATR | Risk: 1% | Max 3 trades/day        |
+//|  ADX threshold is relative to its own rolling average, not a    |
+//|  fixed number — "strong trend" is judged against what's normal  |
+//|  for this market recently, so it self-adjusts as conditions     |
+//|  change instead of using one hardcoded cutoff forever.          |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "9.40"
+#property version   "9.50"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
