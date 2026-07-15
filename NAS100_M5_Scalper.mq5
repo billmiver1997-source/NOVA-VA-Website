@@ -6,7 +6,7 @@
 //|  SL: 0.6×ATR | TP: 1.0×ATR | Risk: 1% | Max 4 trades/day        |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "3.30"
+#property version   "3.40"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
