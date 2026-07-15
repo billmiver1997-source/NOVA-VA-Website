@@ -175,11 +175,13 @@ void OnTick()
 
    bool crossUp = sk[1]>sd[1] && sk[2]<=sd[2] && sk[1]<InpOversold;
    bool crossDn = sk[1]<sd[1] && sk[2]>=sd[2] && sk[1]>InpOverbought;
-   bool trendTooStrong = adx[1] > InpADXMax;
+   double adxAvg = AdxBaseline();
+   bool trendTooStrong = adx[1] > adxAvg*InpADXRelMult || adx[1] > InpADXAbsCap;
    bool newsBlack = NewsBlackout();
 
    Print("SCAN | K=",DoubleToString(sk[1],1)," D=",DoubleToString(sd[1],1),
          " RSI=",DoubleToString(rsi[1],1)," ADX=",DoubleToString(adx[1],1),
+         " ADXavg=",DoubleToString(adxAvg,1),
          " Cross=",crossUp?"BUY↑":crossDn?"SELL↓":"–",
          trendTooStrong && (crossUp||crossDn) ? " [TREND-SKIP]" : "",
          newsBlack && (crossUp||crossDn) ? " [NEWS-BLACKOUT]" : "",
