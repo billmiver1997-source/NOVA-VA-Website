@@ -40,9 +40,11 @@ input int    InpCooldownMin= 10;
 input int    InpStartHour  = 13;
 input int    InpEndHour    = 22;
 
-input group "=== ADX (light trend filter) ==="
-input int    InpADXPeriod  = 14;
-input double InpADXMax     = 35.0;   // skip counter-trend entries when trend this strong
+input group "=== ADX (adaptive trend filter) ==="
+input int    InpADXPeriod    = 14;
+input int    InpADXAvgPeriod = 30;    // bars used to compute this market's own recent-normal ADX
+input double InpADXRelMult   = 1.4;   // skip when ADX is this many times ABOVE its own recent average
+input double InpADXAbsCap    = 50.0;  // hard safety ceiling regardless of the adaptive baseline
 
 input group "=== NEWS FILTER ==="
 input bool   InpNewsFilterOn      = true;
