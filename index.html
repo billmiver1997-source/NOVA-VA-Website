@@ -279,7 +279,7 @@
   .stat-num{ display:block; font-family:'Fraunces', serif; font-size:44px; font-weight:600; color:var(--gold); line-height:1; }
   .stat-label{ display:block; font-size:12.5px; color:var(--text-muted); margin-top:10px; font-family:'JetBrains Mono', monospace; text-transform:uppercase; letter-spacing:0.06em; max-width:180px; }
 
-  .live-chat-demo{ display:flex; justify-content:center; margin-bottom:44px; }
+  .live-chat-demo{ display:flex; align-items:center; justify-content:center; }
   .chat-window{ width:100%; max-width:380px; background:#15111b; border-radius:20px; border:1px solid rgba(201,169,97,0.25); box-shadow:0 20px 50px rgba(20,15,8,0.28); overflow:hidden; }
   .chat-header{ display:flex; align-items:center; gap:10px; padding:14px 16px; background:rgba(255,255,255,0.03); border-bottom:1px solid rgba(255,255,255,0.07); }
   .chat-avatar{ width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg, var(--gold), var(--gold-bright)); display:flex; align-items:center; justify-content:center; font-family:'Fraunces', serif; font-weight:700; color:#141414; flex-shrink:0; }
@@ -450,24 +450,24 @@
       <h2 data-i18n="demo.h2">What your audience actually sees.</h2>
       <p data-i18n="demo.lead">A real exchange inside the bot: branded, automatic, and available around the clock.</p>
     </div>
-    <div class="live-chat-demo fade-in" aria-hidden="true">
-      <div class="chat-window">
-        <div class="chat-header">
-          <div class="chat-avatar">N</div>
-          <div class="chat-header-text">
-            <div class="chat-name">NOVA VA Bot</div>
-            <div class="chat-status"><span class="status-dot"></span>online</div>
+    <div class="demo-gallery fade-in">
+      <figure class="live-chat-demo" aria-hidden="true">
+        <div class="chat-window">
+          <div class="chat-header">
+            <div class="chat-avatar">N</div>
+            <div class="chat-header-text">
+              <div class="chat-name">NOVA VA Bot</div>
+              <div class="chat-status"><span class="status-dot"></span>online</div>
+            </div>
+          </div>
+          <div class="chat-body" id="liveChatBody"></div>
+          <div class="chat-input-bar">
+            <span class="chat-input-icon">📎</span>
+            <span class="chat-input-placeholder">Message</span>
+            <span class="chat-input-icon">🎤</span>
           </div>
         </div>
-        <div class="chat-body" id="liveChatBody"></div>
-        <div class="chat-input-bar">
-          <span class="chat-input-icon">📎</span>
-          <span class="chat-input-placeholder">Message</span>
-          <span class="chat-input-icon">🎤</span>
-        </div>
-      </div>
-    </div>
-    <div class="demo-gallery fade-in">
+      </figure>
       <figure>
         <img src="demo-screens/demo-welcome.jpg" alt="Bot welcome message with main menu: Education, Brokers, Market Overview, Our Community" loading="lazy">
         <figcaption data-i18n="demo.caption1">Welcome &amp; Main Menu</figcaption>
