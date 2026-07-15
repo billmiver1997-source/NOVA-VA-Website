@@ -76,17 +76,24 @@ int OnInit()
    { Print("Init failed"); return INIT_FAILED; }
    ArraySetAsSeries(sk,true); ArraySetAsSeries(sd,true);
    ArraySetAsSeries(rsi,true); ArraySetAsSeries(atr_v,true); ArraySetAsSeries(adx,true);
-   Print("XAUUSD v9 MeanReversion OK | Stoch25/75 | 3x/day | 20min cd | ADX<",DoubleToString(InpADXMax,0));
+   Print("XAUUSD v9 MeanReversion OK | Stoch25/75 | 3x/day | 20min cd | adaptive ADX x",DoubleToString(InpADXRelMult,1));
    return INIT_SUCCEEDED;
 }
 void OnDeinit(const int r){ IndicatorRelease(hStoch); IndicatorRelease(hRSI); IndicatorRelease(hATR); IndicatorRelease(hADX); }
 bool Refresh()
 {
+   int adxBars = InpADXAvgPeriod + 2;
    return CopyBuffer(hStoch,0,0,4,sk)    >=4
        && CopyBuffer(hStoch,1,0,4,sd)    >=4
        && CopyBuffer(hRSI,  0,0,4,rsi)   >=4
        && CopyBuffer(hATR,  0,0,4,atr_v) >=4
-       && CopyBuffer(hADX,  0,0,4,adx)   >=4;
+       && CopyBuffer(hADX,  0,0,adxBars,adx) >= adxBars;
+}
+double AdxBaseline()
+{
+   double sum=0; int n=0;
+   for(int i=1;i<=InpADXAvgPeriod && i<ArraySize(adx);i++){ sum+=adx[i]; n++; }
+   return n>0 ? sum/n : adx[1];
 }
 bool InSession()
 {
