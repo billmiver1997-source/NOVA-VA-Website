@@ -208,7 +208,7 @@ void OnTick()
         Print("!!! BUY FAILED | retcode=",trade.ResultRetcode()," ",trade.ResultRetcodeDescription(),
               " | lots=",lots," ask=",ask," sl=",sl," tp=",tp," stops_level=",(long)SymbolInfoInteger(_Symbol,SYMBOL_TRADE_STOPS_LEVEL));
    }
-   else if(crossDn && rsi[1]<InpRSImax && !HasSell())
+   else if(crossDn && rsi[1]<InpRSImax && !HasSell() && !HasBuy())
    {
       double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
       double sl=NormalizeDouble(bid+av*InpSL,_Digits);
