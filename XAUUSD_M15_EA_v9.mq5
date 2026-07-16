@@ -196,7 +196,7 @@ void OnTick()
 
    if(trendTooStrong || newsBlack) return;
 
-   if(crossUp && rsi[1]>InpRSImin && !HasBuy())
+   if(crossUp && rsi[1]>InpRSImin && !HasBuy() && !HasSell())
    {
       double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
       double sl=NormalizeDouble(ask-av*InpSL,_Digits);
