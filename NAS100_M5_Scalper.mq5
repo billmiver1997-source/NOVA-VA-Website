@@ -10,7 +10,7 @@
 //|  changes stop distance, not risk per trade or entry frequency.  |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "3.50"
+#property version   "3.51"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
