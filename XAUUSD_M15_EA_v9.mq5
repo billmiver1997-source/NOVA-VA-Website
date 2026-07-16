@@ -38,8 +38,8 @@ input double InpSL      = 1.1;
 input double InpTP      = 1.6;
 input double InpRisk    = 1.0;
 input double InpMaxDD   = 4.0;
-input double InpTrailTrigger = 0.9;
-input double InpTrailLock    = 0.4;
+input double InpTrailTrigger = 1.2;
+input double InpTrailLock    = 0.53;
 
 input group "=== FILTERS ==="
 input double InpMaxSpread  = 60.0;
