@@ -30,8 +30,8 @@ input double InpRSImax  = 85.0;  // no sell if RSI above this (parabola)
 
 input group "=== RISK ==="
 input int    InpATR     = 10;
-input double InpSL      = 0.6;
-input double InpTP      = 1.0;
+input double InpSL      = 0.85;
+input double InpTP      = 1.4;
 input double InpRisk    = 1.0;
 input double InpMaxDD   = 4.0;
 input double InpTrailTrigger = 0.8;
