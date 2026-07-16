@@ -197,20 +197,24 @@ void OnTick()
    double adxAvg = AdxBaseline();
    bool trendTooStrong = adx[1] > adxAvg*InpADXRelMult || adx[1] > InpADXAbsCap;
    bool newsBlack = NewsBlackout();
+   bool biasUp = closeArr[1] > ema[1];
+   bool biasBlockBuy  = crossUp && !biasUp;   // dip-buy fighting a downtrend
+   bool biasBlockSell = crossDn && biasUp;    // rip-sell fighting an uptrend
 
    Print("SCAN | K=",DoubleToString(sk[1],1)," D=",DoubleToString(sd[1],1),
          " RSI=",DoubleToString(rsi[1],1)," ADX=",DoubleToString(adx[1],1),
-         " ADXavg=",DoubleToString(adxAvg,1),
+         " ADXavg=",DoubleToString(adxAvg,1)," Bias=",biasUp?"UP":"DN",
          " Cross=",crossUp?"BUY↑":crossDn?"SELL↓":"–",
          trendTooStrong && (crossUp||crossDn) ? " [TREND-SKIP]" : "",
          newsBlack && (crossUp||crossDn) ? " [NEWS-BLACKOUT]" : "",
+         (biasBlockBuy||biasBlockSell) ? " [BIAS-SKIP]" : "",
          " Day=",dayTrades,"/",InpMaxTrades);
 
    double av=atr_v[1];
 
    if(trendTooStrong || newsBlack) return;
 
-   if(crossUp && rsi[1]>InpRSImin && !HasBuy() && !HasSell())
+   if(crossUp && rsi[1]>InpRSImin && !HasBuy() && !HasSell() && !biasBlockBuy)
    {
       double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
       double sl=NormalizeDouble(ask-av*InpSL,_Digits);
