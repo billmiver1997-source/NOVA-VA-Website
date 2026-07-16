@@ -34,8 +34,8 @@ input double InpRSImax  = 85.0;
 
 input group "=== RISK ==="
 input int    InpATR     = 14;
-input double InpSL      = 0.8;
-input double InpTP      = 1.2;
+input double InpSL      = 1.1;
+input double InpTP      = 1.6;
 input double InpRisk    = 1.0;
 input double InpMaxDD   = 4.0;
 input double InpTrailTrigger = 0.9;
