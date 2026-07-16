@@ -78,14 +78,16 @@ int OnInit()
    hRSI   = iRSI(_Symbol,PERIOD_M5,InpRSI,PRICE_CLOSE);
    hATR   = iATR(_Symbol,PERIOD_M5,InpATR);
    hADX   = iADX(_Symbol,PERIOD_M5,InpADXPeriod);
-   if(hStoch==INVALID_HANDLE||hRSI==INVALID_HANDLE||hATR==INVALID_HANDLE||hADX==INVALID_HANDLE)
+   hEMA   = iMA(_Symbol,PERIOD_M5,InpEMAPeriod,0,MODE_EMA,PRICE_CLOSE);
+   if(hStoch==INVALID_HANDLE||hRSI==INVALID_HANDLE||hATR==INVALID_HANDLE||hADX==INVALID_HANDLE||hEMA==INVALID_HANDLE)
    { Print("Init failed"); return INIT_FAILED; }
    ArraySetAsSeries(sk,true); ArraySetAsSeries(sd,true);
    ArraySetAsSeries(rsi,true); ArraySetAsSeries(atr_v,true); ArraySetAsSeries(adx,true);
-   Print("NAS100 v3 MeanReversion OK | Stoch25/75 | 4x/day | 10min cd | adaptive ADX x",DoubleToString(InpADXRelMult,1));
+   ArraySetAsSeries(ema,true); ArraySetAsSeries(closeArr,true);
+   Print("NAS100 v3 MeanReversion OK | Stoch25/75 | 4x/day | 10min cd | adaptive ADX x",DoubleToString(InpADXRelMult,1)," | EMA",InpEMAPeriod," bias");
    return INIT_SUCCEEDED;
 }
-void OnDeinit(const int r){ IndicatorRelease(hStoch); IndicatorRelease(hRSI); IndicatorRelease(hATR); IndicatorRelease(hADX); }
+void OnDeinit(const int r){ IndicatorRelease(hStoch); IndicatorRelease(hRSI); IndicatorRelease(hATR); IndicatorRelease(hADX); IndicatorRelease(hEMA); }
 bool Refresh()
 {
    int adxBars = InpADXAvgPeriod + 2;
@@ -93,7 +95,9 @@ bool Refresh()
        && CopyBuffer(hStoch,1,0,4,sd)    >=4
        && CopyBuffer(hRSI,  0,0,4,rsi)   >=4
        && CopyBuffer(hATR,  0,0,4,atr_v) >=4
-       && CopyBuffer(hADX,  0,0,adxBars,adx) >= adxBars;
+       && CopyBuffer(hADX,  0,0,adxBars,adx) >= adxBars
+       && CopyBuffer(hEMA,  0,0,4,ema)   >=4
+       && CopyClose(_Symbol,PERIOD_M5,0,4,closeArr) >=4;
 }
 double AdxBaseline()
 {
