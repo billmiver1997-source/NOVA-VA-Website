@@ -12,9 +12,16 @@
 //|  (fast <3min stopouts kept reversing back in our favor) —       |
 //|  Lots() auto-shrinks size to hold risk% constant, so this only  |
 //|  changes stop distance, not risk per trade or entry frequency.  |
+//|  DIRECTIONAL BIAS: ADX only measures trend STRENGTH, not which  |
+//|  way — this EA was still buying dips into real downtrends and   |
+//|  selling rips into real uptrends (the exact pattern behind our  |
+//|  worst losses). A slow EMA now gates direction: BUY only when   |
+//|  price is above it, SELL only when below. Complements ADX       |
+//|  (magnitude) with actual direction, without touching signal     |
+//|  frequency in genuinely rangy conditions.                       |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "9.61"
+#property version   "9.70"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
