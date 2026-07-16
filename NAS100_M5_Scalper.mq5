@@ -60,8 +60,11 @@ input int    InpNewsMinutesBefore = 30;   // no new entries this many minutes be
 input int    InpNewsMinutesAfter  = 30;   // ...and this many minutes after
 input string InpNewsCurrency      = "USD";
 
-int hStoch, hRSI, hATR, hADX;
-double sk[], sd[], rsi[], atr_v[], adx[];
+input group "=== DIRECTIONAL BIAS (trade with the bigger trend) ==="
+input int    InpEMAPeriod = 100;   // ~8h of the session on M5 — only fade in the EMA's direction
+
+int hStoch, hRSI, hATR, hADX, hEMA;
+double sk[], sd[], rsi[], atr_v[], adx[], ema[], closeArr[];
 datetime lastTrade=0;
 double   dayEq=0; int lastDay=-1;
 int      dayTrades=0;
