@@ -21,7 +21,7 @@
 //|  frequency in genuinely rangy conditions.                       |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "9.70"
+#property version   "9.71"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
