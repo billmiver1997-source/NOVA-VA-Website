@@ -14,7 +14,7 @@
 //|  direction, without touching frequency in rangy conditions.     |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "3.60"
+#property version   "3.61"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
