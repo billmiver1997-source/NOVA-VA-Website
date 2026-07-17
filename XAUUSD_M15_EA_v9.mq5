@@ -69,7 +69,8 @@ input int    InpNewsMinutesAfter  = 30;   // ...and this many minutes after
 input string InpNewsCurrency      = "USD";
 
 input group "=== DIRECTIONAL BIAS (trade with the bigger trend) ==="
-input int    InpEMAPeriod = 100;   // ~1 trading day on M15 — only fade in the EMA's direction
+input int    InpEMAPeriod = 40;    // ~10h on M15 — fast enough to catch an intraday trend flip
+                                    // (100 was too slow: kept reading stale direction into a real move)
 
 int hStoch, hRSI, hATR, hADX, hEMA;
 double sk[], sd[], rsi[], atr_v[], adx[], ema[], closeArr[];
