@@ -80,11 +80,20 @@ input group "=== DIRECTIONAL BIAS (trade with the bigger trend) ==="
 input int    InpEMAPeriod = 40;    // ~10h on M15 — fast enough to catch an intraday trend flip
                                     // (100 was too slow: kept reading stale direction into a real move)
 
+input group "=== BREAKOUT-RETEST (2nd entry path) ==="
+input bool   InpBreakoutOn       = true;
+input int    InpBreakoutLookback = 20;   // bars used to define the level that gets broken
+input double InpRetestTolerance  = 0.3;  // ×ATR — how close price must return to the level to count as a retest
+input int    InpRetestMaxBars    = 20;   // give up on a break if no retest within this many bars
+input double InpBreakoutSL       = 1.0;  // ×ATR stop beyond the retested level
+input double InpBreakoutTP       = 2.0;  // ×ATR target — wider, this is trend-following not fading
+
 int hStoch, hRSI, hATR, hADX, hEMA;
-double sk[], sd[], rsi[], atr_v[], adx[], ema[], closeArr[];
+double sk[], sd[], rsi[], atr_v[], adx[], ema[], closeArr[], highArr[], lowArr[];
 datetime lastTrade=0;
 double   dayEq=0; int lastDay=-1;
 int      dayTrades=0;
+double   breakLevel=0; int breakDir=0; int barsSinceBreak=0;
 
 int OnInit()
 {
