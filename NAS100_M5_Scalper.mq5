@@ -12,9 +12,17 @@
 //|  way — a slow EMA now gates direction: BUY only above it, SELL  |
 //|  only below it. Complements ADX (magnitude) with actual         |
 //|  direction, without touching frequency in rangy conditions.     |
+//|  BREAKOUT-RETEST: second, independent entry path alongside the  |
+//|  mean-reversion signal above. Tracks the N-bar high/low; when   |
+//|  price closes through it, that level is remembered as "broken". |
+//|  If price then pulls back close to it without closing back      |
+//|  through, and the pullback bar closes back in the breakout      |
+//|  direction, that's the retest — enter with the breakout, not    |
+//|  against it. Still one position at a time (same risk gate as    |
+//|  the rest of the EA) to keep exposure predictable.               |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "3.61"
+#property version   "3.70"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
