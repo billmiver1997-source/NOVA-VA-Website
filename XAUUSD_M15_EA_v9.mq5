@@ -22,14 +22,16 @@
 //|  BREAKOUT-RETEST: second, independent entry path alongside the  |
 //|  mean-reversion signal above. Tracks the N-bar high/low; when   |
 //|  price closes through it, that level is remembered as "broken". |
-//|  If price then pulls back close to it without closing back      |
-//|  through, and the pullback bar closes back in the breakout      |
-//|  direction, that's the retest — enter with the breakout, not    |
-//|  against it. Still one position at a time (same risk gate as    |
-//|  the rest of the EA) to keep exposure predictable.               |
+//|  Went 0/5 on first live outing (2026-07-21/22), all fast SL     |
+//|  hits — same signature as the mean-reversion SL being too tight |
+//|  originally. Reworked: SL widened 1.0->1.6x ATR (a retest zone  |
+//|  is BY DEFINITION going to get whipsawed — needs room), and     |
+//|  entry now requires the bar's actual wick to have touched the   |
+//|  level (not just the close hovering near it) plus a real        |
+//|  rejection margin on the close, not a bare graze.                |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "9.81"
+#property version   "9.90"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
