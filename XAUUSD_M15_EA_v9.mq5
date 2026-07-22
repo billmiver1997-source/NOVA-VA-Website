@@ -284,7 +284,13 @@ void OnTick()
       }
       else barsSinceBreak++;
 
-      if(breakDir==1 && MathAbs(c1-breakLevel)<=av*InpRetestTolerance && c1>breakLevel && c1>c2)
+      // Retest must be a real wick-touch-and-reject, not just a close hovering nearby:
+      // the bar's low/high has to have actually dipped into the level's zone, AND the
+      // close has to clear it by a real margin (rejection), AND still moving our way.
+      bool wickTouchUp = breakDir==1 && lowArr[1]<=breakLevel+av*InpRetestTolerance && lowArr[1]>=breakLevel-av*InpRetestTolerance*2;
+      bool wickTouchDn = breakDir==-1 && highArr[1]>=breakLevel-av*InpRetestTolerance && highArr[1]<=breakLevel+av*InpRetestTolerance*2;
+
+      if(breakDir==1 && wickTouchUp && c1>breakLevel+av*InpRejectMargin && c1>c2)
       {
          double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
          double sl=NormalizeDouble(breakLevel-av*InpBreakoutSL,_Digits);
@@ -296,7 +302,7 @@ void OnTick()
          else
            Print("!!! BREAKOUT BUY FAILED | retcode=",trade.ResultRetcode()," ",trade.ResultRetcodeDescription());
       }
-      else if(breakDir==-1 && MathAbs(c1-breakLevel)<=av*InpRetestTolerance && c1<breakLevel && c1<c2)
+      else if(breakDir==-1 && wickTouchDn && c1<breakLevel-av*InpRejectMargin && c1<c2)
       {
          double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
          double sl=NormalizeDouble(breakLevel+av*InpBreakoutSL,_Digits);
