@@ -81,11 +81,12 @@ input int    InpEMAPeriod = 40;    // ~10h on M15 — fast enough to catch an in
                                     // (100 was too slow: kept reading stale direction into a real move)
 
 input group "=== BREAKOUT-RETEST (2nd entry path) ==="
-input bool   InpBreakoutOn       = false;  // OFF: 5/5 losses across both EAs on first deploy (2026-07-21/22) — needs rework before re-enabling
+input bool   InpBreakoutOn       = true;   // re-enabled 2026-07-22 with wider SL + real wick-touch confirmation
 input int    InpBreakoutLookback = 20;   // bars used to define the level that gets broken
-input double InpRetestTolerance  = 0.3;  // ×ATR — how close price must return to the level to count as a retest
+input double InpRetestTolerance  = 0.3;  // ×ATR — how far the bar's wick may sit either side of the level and still count as a genuine retest
+input double InpRejectMargin     = 0.15; // ×ATR — how far the CLOSE must clear the level to count as a real rejection, not a graze
 input int    InpRetestMaxBars    = 20;   // give up on a break if no retest within this many bars
-input double InpBreakoutSL       = 1.0;  // ×ATR stop beyond the retested level
+input double InpBreakoutSL       = 1.6;  // ×ATR stop beyond the level — was 1.0, too tight for a zone that's SUPPOSED to get retested/whipsawed
 input double InpBreakoutTP       = 2.0;  // ×ATR target — wider, this is trend-following not fading
 
 int hStoch, hRSI, hATR, hADX, hEMA;
