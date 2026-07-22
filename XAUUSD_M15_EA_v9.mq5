@@ -29,7 +29,7 @@
 //|  the rest of the EA) to keep exposure predictable.               |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "9.80"
+#property version   "9.81"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
