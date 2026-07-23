@@ -28,7 +28,7 @@
 //|  stays in the file for a future NAS100-specific tune attempt.    |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "3.80"
+#property version   "3.81"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
