@@ -75,7 +75,7 @@ input int    InpEMAPeriod = 40;    // ~3.3h on M5 — fast enough to catch an in
                                     // (100 was too slow: kept reading "UP" ~1h into a real down move)
 
 input group "=== BREAKOUT-RETEST (2nd entry path) ==="
-input bool   InpBreakoutOn       = true;   // re-enabled 2026-07-22 with wider SL + real wick-touch confirmation
+input bool   InpBreakoutOn       = false;  // disabled 2026-07-23: 3y backtest showed the reworked version still hurts NAS100 (net -3,828, PF 0.87) vs mean-reversion alone (net -2,673, PF 0.92); widening lookback to 60 made it worse still (-4,539, PF 0.85). The SL/wick-touch rework fixed gold's breakout-retest but not NAS100's — logic kept in place in case a future NAS100-specific tune is found, just gated off by default.
 input int    InpBreakoutLookback = 20;   // bars used to define the level that gets broken
 input double InpRetestTolerance  = 0.3;  // ×ATR — how far the bar's wick may sit either side of the level and still count as a genuine retest
 input double InpRejectMargin     = 0.15; // ×ATR — how far the CLOSE must clear the level to count as a real rejection, not a graze
