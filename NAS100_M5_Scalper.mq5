@@ -21,7 +21,11 @@
 //|  is BY DEFINITION going to get whipsawed — needs room), and     |
 //|  entry now requires the bar's actual wick to have touched the   |
 //|  level (not just the close hovering near it) plus a real        |
-//|  rejection margin on the close, not a bare graze.                |
+//|  rejection margin on the close, not a bare graze. This rework   |
+//|  fixed GOLD (3y backtest: PF 1.02, net +1,358) but 3y backtest   |
+//|  showed it still hurts NAS100 (net -3,828 vs -2,673 with it off) |
+//|  so it's DISABLED here by default (InpBreakoutOn=false) — logic  |
+//|  stays in the file for a future NAS100-specific tune attempt.    |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
 #property version   "3.80"
