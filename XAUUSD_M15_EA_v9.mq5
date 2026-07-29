@@ -28,10 +28,17 @@
 //|  is BY DEFINITION going to get whipsawed — needs room), and     |
 //|  entry now requires the bar's actual wick to have touched the   |
 //|  level (not just the close hovering near it) plus a real        |
-//|  rejection margin on the close, not a bare graze.                |
+//|  rejection margin on the close, not a bare graze. That rework    |
+//|  validated in a 3y backtest (PF 1.02, net +1,358) but live it's  |
+//|  gone 3W/7L (net -511) since 2026-07-21 — root cause: the        |
+//|  trailing stop triggers at 1.2x ATR, BEFORE the 2.0x ATR TP, so  |
+//|  winners get capped at a small locked profit while losers still  |
+//|  take the full SL. DISABLED again 2026-07-29 pending a trailing- |
+//|  stop fix (skip trailing on breakout trades, or raise the        |
+//|  trigger past the TP) and a fresh backtest.                      |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "9.90"
+#property version   "9.91"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
