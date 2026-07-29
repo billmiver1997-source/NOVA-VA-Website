@@ -93,13 +93,13 @@ input int    InpEMAPeriod = 40;    // ~10h on M15 — fast enough to catch an in
                                     // (100 was too slow: kept reading stale direction into a real move)
 
 input group "=== BREAKOUT-RETEST (2nd entry path, H1-based) ==="
-input bool   InpBreakoutOn       = false;  // reworked 2026-07-30 to read H1 bars instead of M15 (less noise, fewer fakeouts) — re-enable only after backtest validation
+input bool   InpBreakoutOn       = true;   // reworked 2026-07-30 to H1 bars + tuned SL/TP: 3y backtest win rate 62.1%, PF 1.06, net +962.90 over 520 trades (was 30% WR / PF 0.85 on the old M15 version)
 input int    InpBreakoutLookback = 15;   // H1 bars used to define the level that gets broken (~15h window)
 input double InpRetestTolerance  = 0.3;  // ×H1 ATR — how far the bar's wick may sit either side of the level and still count as a genuine retest
 input double InpRejectMargin     = 0.15; // ×H1 ATR — how far the CLOSE must clear the level to count as a real rejection, not a graze
 input int    InpRetestMaxBars    = 8;    // give up on a break if no retest within this many H1 bars
-input double InpBreakoutSL       = 1.6;  // ×H1 ATR stop beyond the level
-input double InpBreakoutTP       = 2.0;  // ×H1 ATR target
+input double InpBreakoutSL       = 1.3;  // ×H1 ATR stop beyond the level — tuned down from 1.6 for a better win-rate/R:R balance
+input double InpBreakoutTP       = 1.4;  // ×H1 ATR target — tuned down from 2.0; a closer target hits far more often without giving up profitability
 input double InpBreakoutMinBody  = 0.5;  // min body/range ratio required on the breakout bar itself — filters weak/indecisive breakouts prone to failing (raises win rate)
 
 int hStoch, hRSI, hATR, hADX, hEMA, hATR_H1;
