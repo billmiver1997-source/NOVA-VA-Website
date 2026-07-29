@@ -107,12 +107,14 @@ int OnInit()
    hATR   = iATR(_Symbol,PERIOD_M5,InpATR);
    hADX   = iADX(_Symbol,PERIOD_M5,InpADXPeriod);
    hEMA   = iMA(_Symbol,PERIOD_M5,InpEMAPeriod,0,MODE_EMA,PRICE_CLOSE);
-   if(hStoch==INVALID_HANDLE||hRSI==INVALID_HANDLE||hATR==INVALID_HANDLE||hADX==INVALID_HANDLE||hEMA==INVALID_HANDLE)
+   hATR_H1= iATR(_Symbol,PERIOD_H1,InpATR);
+   if(hStoch==INVALID_HANDLE||hRSI==INVALID_HANDLE||hATR==INVALID_HANDLE||hADX==INVALID_HANDLE||hEMA==INVALID_HANDLE||hATR_H1==INVALID_HANDLE)
    { Print("Init failed"); return INIT_FAILED; }
    ArraySetAsSeries(sk,true); ArraySetAsSeries(sd,true);
    ArraySetAsSeries(rsi,true); ArraySetAsSeries(atr_v,true); ArraySetAsSeries(adx,true);
    ArraySetAsSeries(ema,true); ArraySetAsSeries(closeArr,true);
-   ArraySetAsSeries(highArr,true); ArraySetAsSeries(lowArr,true);
+   ArraySetAsSeries(atrH1,true); ArraySetAsSeries(openH1,true); ArraySetAsSeries(closeH1,true);
+   ArraySetAsSeries(highH1,true); ArraySetAsSeries(lowH1,true);
    Print("NAS100 v3 MeanReversion OK | Stoch25/75 | 4x/day | 10min cd | adaptive ADX x",DoubleToString(InpADXRelMult,1)," | EMA",InpEMAPeriod," bias | breakout-retest ",InpBreakoutOn?"ON":"OFF");
    return INIT_SUCCEEDED;
 }
