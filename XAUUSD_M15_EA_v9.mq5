@@ -127,7 +127,6 @@ int OnInit()
    ArraySetAsSeries(sk,true); ArraySetAsSeries(sd,true);
    ArraySetAsSeries(rsi,true); ArraySetAsSeries(atr_v,true); ArraySetAsSeries(adx,true);
    ArraySetAsSeries(ema,true); ArraySetAsSeries(closeArr,true);
-   ArraySetAsSeries(highArr,true); ArraySetAsSeries(lowArr,true);
    ArraySetAsSeries(atrH1,true); ArraySetAsSeries(openH1,true); ArraySetAsSeries(closeH1,true);
    ArraySetAsSeries(highH1,true); ArraySetAsSeries(lowH1,true);
    Print("XAUUSD v9 MeanReversion OK | Stoch25/75 | 3x/day | 20min cd | adaptive ADX x",DoubleToString(InpADXRelMult,1)," | EMA",InpEMAPeriod," bias | breakout-retest ",InpBreakoutOn?"ON":"OFF");
