@@ -118,23 +118,29 @@ int OnInit()
    Print("NAS100 v3 MeanReversion OK | Stoch25/75 | 4x/day | 10min cd | adaptive ADX x",DoubleToString(InpADXRelMult,1)," | EMA",InpEMAPeriod," bias | breakout-retest ",InpBreakoutOn?"ON":"OFF");
    return INIT_SUCCEEDED;
 }
-void OnDeinit(const int r){ IndicatorRelease(hStoch); IndicatorRelease(hRSI); IndicatorRelease(hATR); IndicatorRelease(hADX); IndicatorRelease(hEMA); }
+void OnDeinit(const int r){ IndicatorRelease(hStoch); IndicatorRelease(hRSI); IndicatorRelease(hATR); IndicatorRelease(hADX); IndicatorRelease(hEMA); IndicatorRelease(hATR_H1); }
 bool Refresh()
 {
    int adxBars = InpADXAvgPeriod + 2;
-   int hlBars  = InpBreakoutLookback + 3;
    return CopyBuffer(hStoch,0,0,4,sk)    >=4
        && CopyBuffer(hStoch,1,0,4,sd)    >=4
        && CopyBuffer(hRSI,  0,0,4,rsi)   >=4
        && CopyBuffer(hATR,  0,0,4,atr_v) >=4
        && CopyBuffer(hADX,  0,0,adxBars,adx) >= adxBars
        && CopyBuffer(hEMA,  0,0,4,ema)   >=4
-       && CopyClose(_Symbol,PERIOD_M5,0,4,closeArr) >=4
-       && CopyHigh(_Symbol,PERIOD_M5,0,hlBars,highArr) >= hlBars
-       && CopyLow(_Symbol,PERIOD_M5,0,hlBars,lowArr)   >= hlBars;
+       && CopyClose(_Symbol,PERIOD_M5,0,4,closeArr) >=4;
 }
-double RecentHigh(){ double h=highArr[2]; for(int i=3;i<2+InpBreakoutLookback;i++) if(highArr[i]>h) h=highArr[i]; return h; }
-double RecentLow(){ double l=lowArr[2]; for(int i=3;i<2+InpBreakoutLookback;i++) if(lowArr[i]<l) l=lowArr[i]; return l; }
+bool RefreshH1()
+{
+   int hlBars = InpBreakoutLookback + 3;
+   return CopyBuffer(hATR_H1,0,0,4,atrH1) >= 4
+       && CopyOpen (_Symbol,PERIOD_H1,0,4,openH1)   >= 4
+       && CopyClose(_Symbol,PERIOD_H1,0,4,closeH1)  >= 4
+       && CopyHigh (_Symbol,PERIOD_H1,0,hlBars,highH1) >= hlBars
+       && CopyLow  (_Symbol,PERIOD_H1,0,hlBars,lowH1)  >= hlBars;
+}
+double RecentHighH1(){ double h=highH1[2]; for(int i=3;i<2+InpBreakoutLookback;i++) if(highH1[i]>h) h=highH1[i]; return h; }
+double RecentLowH1(){ double l=lowH1[2]; for(int i=3;i<2+InpBreakoutLookback;i++) if(lowH1[i]<l) l=lowH1[i]; return l; }
 double AdxBaseline()
 {
    double sum=0; int n=0;
