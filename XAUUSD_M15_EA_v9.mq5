@@ -83,7 +83,7 @@ input int    InpEMAPeriod = 40;    // ~10h on M15 — fast enough to catch an in
                                     // (100 was too slow: kept reading stale direction into a real move)
 
 input group "=== BREAKOUT-RETEST (2nd entry path) ==="
-input bool   InpBreakoutOn       = true;   // re-enabled 2026-07-22 with wider SL + real wick-touch confirmation
+input bool   InpBreakoutOn       = false;  // disabled 2026-07-29: live sample (10 trades since 7/21) is 3W/7L, net -511, avg win $30 vs avg loss $86 — the trailing stop (trigger 1.2x ATR, lock 0.53x ATR) fires BEFORE the 2.0x ATR breakout TP, capping winners far short of target while losers still take the full 1.6x ATR SL. That mismatch was already baked into the 3y backtest (hence PF only 1.02 — a wafer-thin edge), and live variance pushed it negative. Needs the trailing logic reworked (e.g. skip trailing on breakout trades, or raise the trigger above the TP) and re-backtested before re-enabling. Logic stays in the file, gated off by default.
 input int    InpBreakoutLookback = 20;   // bars used to define the level that gets broken
 input double InpRetestTolerance  = 0.3;  // ×ATR — how far the bar's wick may sit either side of the level and still count as a genuine retest
 input double InpRejectMargin     = 0.15; // ×ATR — how far the CLOSE must clear the level to count as a real rejection, not a graze
