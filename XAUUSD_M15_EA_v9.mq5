@@ -89,21 +89,24 @@ input group "=== DIRECTIONAL BIAS (trade with the bigger trend) ==="
 input int    InpEMAPeriod = 40;    // ~10h on M15 — fast enough to catch an intraday trend flip
                                     // (100 was too slow: kept reading stale direction into a real move)
 
-input group "=== BREAKOUT-RETEST (2nd entry path) ==="
-input bool   InpBreakoutOn       = false;  // disabled 2026-07-29: live sample (10 trades since 7/21) is 3W/7L, net -511, avg win $30 vs avg loss $86 — the trailing stop (trigger 1.2x ATR, lock 0.53x ATR) fires BEFORE the 2.0x ATR breakout TP, capping winners far short of target while losers still take the full 1.6x ATR SL. That mismatch was already baked into the 3y backtest (hence PF only 1.02 — a wafer-thin edge), and live variance pushed it negative. Needs the trailing logic reworked (e.g. skip trailing on breakout trades, or raise the trigger above the TP) and re-backtested before re-enabling. Logic stays in the file, gated off by default.
-input int    InpBreakoutLookback = 20;   // bars used to define the level that gets broken
-input double InpRetestTolerance  = 0.3;  // ×ATR — how far the bar's wick may sit either side of the level and still count as a genuine retest
-input double InpRejectMargin     = 0.15; // ×ATR — how far the CLOSE must clear the level to count as a real rejection, not a graze
-input int    InpRetestMaxBars    = 20;   // give up on a break if no retest within this many bars
-input double InpBreakoutSL       = 1.6;  // ×ATR stop beyond the level — was 1.0, too tight for a zone that's SUPPOSED to get retested/whipsawed
-input double InpBreakoutTP       = 2.0;  // ×ATR target — wider, this is trend-following not fading
+input group "=== BREAKOUT-RETEST (2nd entry path, H1-based) ==="
+input bool   InpBreakoutOn       = false;  // reworked 2026-07-30 to read H1 bars instead of M15 (less noise, fewer fakeouts) — re-enable only after backtest validation
+input int    InpBreakoutLookback = 15;   // H1 bars used to define the level that gets broken (~15h window)
+input double InpRetestTolerance  = 0.3;  // ×H1 ATR — how far the bar's wick may sit either side of the level and still count as a genuine retest
+input double InpRejectMargin     = 0.15; // ×H1 ATR — how far the CLOSE must clear the level to count as a real rejection, not a graze
+input int    InpRetestMaxBars    = 8;    // give up on a break if no retest within this many H1 bars
+input double InpBreakoutSL       = 1.6;  // ×H1 ATR stop beyond the level
+input double InpBreakoutTP       = 2.0;  // ×H1 ATR target
+input double InpBreakoutMinBody  = 0.5;  // min body/range ratio required on the breakout bar itself — filters weak/indecisive breakouts prone to failing (raises win rate)
 
-int hStoch, hRSI, hATR, hADX, hEMA;
+int hStoch, hRSI, hATR, hADX, hEMA, hATR_H1;
 double sk[], sd[], rsi[], atr_v[], adx[], ema[], closeArr[], highArr[], lowArr[];
+double atrH1[], openH1[], closeH1[], highH1[], lowH1[];
 datetime lastTrade=0;
 double   dayEq=0; int lastDay=-1;
 int      dayTrades=0;
 double   breakLevel=0; int breakDir=0; int barsSinceBreak=0;
+datetime lastH1Bar=0;
 
 int OnInit()
 {
