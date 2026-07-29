@@ -37,11 +37,13 @@
 //|  read H1 bars instead of M15 (far less noise/fewer fakeouts),    |
 //|  a body-ratio filter rejects weak/indecisive breakout candles,   |
 //|  and BRK positions are exempt from the M15 trailing stop (they   |
-//|  run to their own fixed H1 SL/TP instead) — fixes the root cause |
-//|  above directly. Pending fresh 3y backtest before re-enabling.   |
+//|  run to their own fixed H1 SL/TP instead). SL/TP retuned to      |
+//|  1.3x/1.4x ATR (from 1.6x/2.0x) — a closer target lands far more |
+//|  often. 3y backtest: win rate 62.1%, PF 1.06, net +962.90/520    |
+//|  trades, RE-ENABLED live 2026-07-30.                             |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "9.92"
+#property version   "9.93"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
