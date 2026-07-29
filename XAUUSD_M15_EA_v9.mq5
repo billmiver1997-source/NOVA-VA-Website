@@ -33,12 +33,15 @@
 //|  gone 3W/7L (net -511) since 2026-07-21 — root cause: the        |
 //|  trailing stop triggers at 1.2x ATR, BEFORE the 2.0x ATR TP, so  |
 //|  winners get capped at a small locked profit while losers still  |
-//|  take the full SL. DISABLED again 2026-07-29 pending a trailing- |
-//|  stop fix (skip trailing on breakout trades, or raise the        |
-//|  trigger past the TP) and a fresh backtest.                      |
+//|  take the full SL. REWORKED 2026-07-30: level/break/retest now   |
+//|  read H1 bars instead of M15 (far less noise/fewer fakeouts),    |
+//|  a body-ratio filter rejects weak/indecisive breakout candles,   |
+//|  and BRK positions are exempt from the M15 trailing stop (they   |
+//|  run to their own fixed H1 SL/TP instead) — fixes the root cause |
+//|  above directly. Pending fresh 3y backtest before re-enabling.   |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "9.91"
+#property version   "9.92"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
