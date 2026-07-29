@@ -103,7 +103,7 @@ input double InpBreakoutTP       = 2.0;  // ×H1 ATR target
 input double InpBreakoutMinBody  = 0.5;  // min body/range ratio required on the breakout bar itself — filters weak/indecisive breakouts prone to failing (raises win rate)
 
 int hStoch, hRSI, hATR, hADX, hEMA, hATR_H1;
-double sk[], sd[], rsi[], atr_v[], adx[], ema[], closeArr[], highArr[], lowArr[];
+double sk[], sd[], rsi[], atr_v[], adx[], ema[], closeArr[];
 double atrH1[], openH1[], closeH1[], highH1[], lowH1[];
 datetime lastTrade=0;
 double   dayEq=0; int lastDay=-1;
