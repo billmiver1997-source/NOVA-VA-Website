@@ -293,48 +293,62 @@ void OnTick()
 
    // --- Breakout-retest: independent of the mean-reversion signal above,
    //     and intentionally NOT gated by trendTooStrong — a strong trend is
-   //     exactly what this path is trying to trade WITH.
+   //     exactly what this path is trying to trade WITH. Runs on H1 bars
+   //     (level/break/retest all read from H1 price action) so it only
+   //     needs re-evaluating once a new H1 candle has actually closed.
    if(InpBreakoutOn && !HasBuy() && !HasSell() && dayTrades<InpMaxTrades)
    {
-      double rHigh=RecentHigh(), rLow=RecentLow();
-      double c1=closeArr[1], c2=closeArr[2];
-
-      if(breakDir==0 || barsSinceBreak>InpRetestMaxBars)
+      datetime curH1 = iTime(_Symbol,PERIOD_H1,0);
+      if(curH1!=lastH1Bar)
       {
-         if(c1>rHigh && c2<=rHigh) { breakLevel=rHigh; breakDir=1; barsSinceBreak=0; Print("BREAK-UP level=",DoubleToString(breakLevel,_Digits)); }
-         else if(c1<rLow && c2>=rLow) { breakLevel=rLow; breakDir=-1; barsSinceBreak=0; Print("BREAK-DN level=",DoubleToString(breakLevel,_Digits)); }
-      }
-      else barsSinceBreak++;
+         lastH1Bar=curH1;
+         if(RefreshH1())
+         {
+            double rHigh=RecentHighH1(), rLow=RecentLowH1();
+            double c1=closeH1[1], c2=closeH1[2];
+            double avH1=atrH1[1];
 
-      // Retest must be a real wick-touch-and-reject, not just a close hovering nearby:
-      // the bar's low/high has to have actually dipped into the level's zone, AND the
-      // close has to clear it by a real margin (rejection), AND still moving our way.
-      bool wickTouchUp = breakDir==1 && lowArr[1]<=breakLevel+av*InpRetestTolerance && lowArr[1]>=breakLevel-av*InpRetestTolerance*2;
-      bool wickTouchDn = breakDir==-1 && highArr[1]>=breakLevel-av*InpRetestTolerance && highArr[1]<=breakLevel+av*InpRetestTolerance*2;
+            if(breakDir==0 || barsSinceBreak>InpRetestMaxBars)
+            {
+               double range1=highH1[1]-lowH1[1];
+               double body1=MathAbs(closeH1[1]-openH1[1]);
+               bool strongBar = range1>0 && (body1/range1)>=InpBreakoutMinBody;
+               if(c1>rHigh && c2<=rHigh && strongBar) { breakLevel=rHigh; breakDir=1; barsSinceBreak=0; Print("BREAK-UP(H1) level=",DoubleToString(breakLevel,_Digits)); }
+               else if(c1<rLow && c2>=rLow && strongBar) { breakLevel=rLow; breakDir=-1; barsSinceBreak=0; Print("BREAK-DN(H1) level=",DoubleToString(breakLevel,_Digits)); }
+            }
+            else barsSinceBreak++;
 
-      if(breakDir==1 && wickTouchUp && c1>breakLevel+av*InpRejectMargin && c1>c2)
-      {
-         double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
-         double sl=NormalizeDouble(breakLevel-av*InpBreakoutSL,_Digits);
-         double tp=NormalizeDouble(ask+av*InpBreakoutTP,_Digits);
-         double lots=Lots(ask-sl);
-         if(trade.Buy(lots,_Symbol,ask,sl,tp,"XAU_BRK_BUY"))
-         { lastTrade=TimeCurrent(); dayTrades++; breakDir=0;
-           Print(">>> BREAKOUT BUY (retest of ",DoubleToString(breakLevel,_Digits),") | lots=",lots," sl=",sl," tp=",tp); }
-         else
-           Print("!!! BREAKOUT BUY FAILED | retcode=",trade.ResultRetcode()," ",trade.ResultRetcodeDescription());
-      }
-      else if(breakDir==-1 && wickTouchDn && c1<breakLevel-av*InpRejectMargin && c1<c2)
-      {
-         double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
-         double sl=NormalizeDouble(breakLevel+av*InpBreakoutSL,_Digits);
-         double tp=NormalizeDouble(bid-av*InpBreakoutTP,_Digits);
-         double lots=Lots(sl-bid);
-         if(trade.Sell(lots,_Symbol,bid,sl,tp,"XAU_BRK_SELL"))
-         { lastTrade=TimeCurrent(); dayTrades++; breakDir=0;
-           Print(">>> BREAKOUT SELL (retest of ",DoubleToString(breakLevel,_Digits),") | lots=",lots," sl=",sl," tp=",tp); }
-         else
-           Print("!!! BREAKOUT SELL FAILED | retcode=",trade.ResultRetcode()," ",trade.ResultRetcodeDescription());
+            // Retest must be a real wick-touch-and-reject, not just a close hovering nearby:
+            // the H1 bar's low/high has to have actually dipped into the level's zone, AND the
+            // close has to clear it by a real margin (rejection), AND still moving our way.
+            bool wickTouchUp = breakDir==1 && lowH1[1]<=breakLevel+avH1*InpRetestTolerance && lowH1[1]>=breakLevel-avH1*InpRetestTolerance*2;
+            bool wickTouchDn = breakDir==-1 && highH1[1]>=breakLevel-avH1*InpRetestTolerance && highH1[1]<=breakLevel+avH1*InpRetestTolerance*2;
+
+            if(breakDir==1 && wickTouchUp && c1>breakLevel+avH1*InpRejectMargin && c1>c2)
+            {
+               double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
+               double sl=NormalizeDouble(breakLevel-avH1*InpBreakoutSL,_Digits);
+               double tp=NormalizeDouble(ask+avH1*InpBreakoutTP,_Digits);
+               double lots=Lots(ask-sl);
+               if(trade.Buy(lots,_Symbol,ask,sl,tp,"XAU_BRK_BUY"))
+               { lastTrade=TimeCurrent(); dayTrades++; breakDir=0;
+                 Print(">>> BREAKOUT BUY (retest of ",DoubleToString(breakLevel,_Digits),") | lots=",lots," sl=",sl," tp=",tp); }
+               else
+                 Print("!!! BREAKOUT BUY FAILED | retcode=",trade.ResultRetcode()," ",trade.ResultRetcodeDescription());
+            }
+            else if(breakDir==-1 && wickTouchDn && c1<breakLevel-avH1*InpRejectMargin && c1<c2)
+            {
+               double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
+               double sl=NormalizeDouble(breakLevel+avH1*InpBreakoutSL,_Digits);
+               double tp=NormalizeDouble(bid-avH1*InpBreakoutTP,_Digits);
+               double lots=Lots(sl-bid);
+               if(trade.Sell(lots,_Symbol,bid,sl,tp,"XAU_BRK_SELL"))
+               { lastTrade=TimeCurrent(); dayTrades++; breakDir=0;
+                 Print(">>> BREAKOUT SELL (retest of ",DoubleToString(breakLevel,_Digits),") | lots=",lots," sl=",sl," tp=",tp); }
+               else
+                 Print("!!! BREAKOUT SELL FAILED | retcode=",trade.ResultRetcode()," ",trade.ResultRetcodeDescription());
+            }
+         }
       }
    }
 }
