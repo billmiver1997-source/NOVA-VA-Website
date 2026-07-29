@@ -24,11 +24,15 @@
 //|  rejection margin on the close, not a bare graze. This rework   |
 //|  fixed GOLD (3y backtest: PF 1.02, net +1,358) but 3y backtest   |
 //|  showed it still hurts NAS100 (net -3,828 vs -2,673 with it off) |
-//|  so it's DISABLED here by default (InpBreakoutOn=false) — logic  |
-//|  stays in the file for a future NAS100-specific tune attempt.    |
+//|  even worsened by a wider lookback (-4,539). REWORKED 2026-07-30 |
+//|  to read H1 bars instead of M5 (far less noise/fewer fakeouts),  |
+//|  a body-ratio filter rejects weak/indecisive breakout candles,   |
+//|  and BRK positions are exempt from the M5 trailing stop (they    |
+//|  run to their own fixed H1 SL/TP instead). Pending fresh 3y      |
+//|  backtest before re-enabling.                                    |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "3.81"
+#property version   "3.82"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
