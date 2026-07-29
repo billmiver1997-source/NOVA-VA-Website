@@ -204,6 +204,7 @@ void TrailStop()
    for(int i=PositionsTotal()-1;i>=0;i--)
    {
       if(!pos.SelectByIndex(i)||pos.Magic()!=20250709||pos.Symbol()!=_Symbol) continue;
+      if(StringFind(pos.Comment(),"BRK")>=0) continue; // breakout trades run to their own fixed H1 SL/TP — the tight M15 trail was capping wins far short of target
       double op=pos.PriceOpen(),sl=pos.StopLoss(),tp=pos.TakeProfit(),av=atr_v[0];
       if(pos.PositionType()==POSITION_TYPE_BUY)
       { double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
