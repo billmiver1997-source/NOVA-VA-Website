@@ -31,9 +31,20 @@
 //|  run to their own fixed H1 SL/TP instead). SL/TP retuned to      |
 //|  1.3x/1.4x ATR (from 1.6x/2.0x). 3y backtest: win rate 69.0%,    |
 //|  PF 1.49, net +1,088.17/84 trades, RE-ENABLED live 2026-07-30.   |
+//|  2026-08-08: two live losses diagnosed from that day's log.      |
+//|  (1) Breakout SELL fired at ADX 13.4 vs a 27.0 baseline — no     |
+//|  real trend behind the break, got run over by a 21h rally        |
+//|  (-70.76). Added InpBreakoutADXMin: breakout entries now need    |
+//|  at least this much M5 ADX to fire, same array trendTooStrong    |
+//|  already reads, just a floor instead of only a ceiling.          |
+//|  (2) A tight-SL mean-reversion BUY sized to 0.21 lots on the     |
+//|  same 1% risk and got whipsawed 32s after entry (-84.23) — the   |
+//|  tight stop that should have kept the loss small instead         |
+//|  produced an oversized position. Added InpMaxLots as a hard      |
+//|  ceiling on Lots(), independent of the risk calc.                |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "3.83"
+#property version   "3.84"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
