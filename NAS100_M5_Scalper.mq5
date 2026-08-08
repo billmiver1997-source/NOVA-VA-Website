@@ -327,7 +327,7 @@ void OnTick()
             bool wickTouchUp = breakDir==1 && lowH1[1]<=breakLevel+avH1*InpRetestTolerance && lowH1[1]>=breakLevel-avH1*InpRetestTolerance*2;
             bool wickTouchDn = breakDir==-1 && highH1[1]>=breakLevel-avH1*InpRetestTolerance && highH1[1]<=breakLevel+avH1*InpRetestTolerance*2;
 
-            if(breakDir==1 && wickTouchUp && c1>breakLevel+avH1*InpRejectMargin && c1>c2)
+            if(breakDir==1 && wickTouchUp && c1>breakLevel+avH1*InpRejectMargin && c1>c2 && adx[1]>=InpBreakoutADXMin)
             {
                double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
                double sl=NormalizeDouble(breakLevel-avH1*InpBreakoutSL,_Digits);
