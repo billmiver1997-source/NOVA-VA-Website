@@ -72,6 +72,9 @@ input int    InpADXPeriod    = 14;
 input int    InpADXAvgPeriod = 30;    // bars used to compute this market's own recent-normal ADX
 input double InpADXRelMult   = 1.4;   // skip when ADX is this many times ABOVE its own recent average
 input double InpADXAbsCap    = 50.0;  // hard safety ceiling regardless of the adaptive baseline
+input double InpBreakoutADXMin = 18.0; // min M5 ADX required to trust a breakout signal — 2026-08-06 SELL
+                                        // fired at ADX 13.4 vs a 27.0 baseline (no real trend behind the
+                                        // break), got run over by a 21h rally and lost -70.76
 
 input group "=== NEWS FILTER ==="
 input bool   InpNewsFilterOn      = true;
