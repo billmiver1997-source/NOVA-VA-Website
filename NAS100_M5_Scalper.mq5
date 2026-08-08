@@ -59,6 +59,9 @@ input double InpRisk    = 1.0;
 input double InpMaxDD   = 4.0;
 input double InpTrailTrigger = 1.12;
 input double InpTrailLock    = 0.42;
+input double InpMaxLots      = 0.25;  // hard cap regardless of risk-calc — 2026-08-07 a tight-SL BUY sized
+                                       // to 0.21 lots on the same 1% risk and got whipsawed in 32s, so the
+                                       // tight stop turned into an oversized loss instead of a small one
 
 input group "=== FILTERS ==="
 input double InpMaxSpread  = 200.0;
