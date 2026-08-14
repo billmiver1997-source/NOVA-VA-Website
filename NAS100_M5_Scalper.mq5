@@ -42,9 +42,17 @@
 //|  tight stop that should have kept the loss small instead         |
 //|  produced an oversized position. Added InpMaxLots as a hard      |
 //|  ceiling on Lots(), independent of the risk calc.                |
+//|  2026-08-13: choppy NAS100 session — 3 of 4 mean-reversion BUYs  |
+//|  got whipsawed in 2-13min despite clean K/D crosses and moderate |
+//|  ADX; the tightest (12.7pt SL) died in 3min (-31.85). The ADX    |
+//|  floor from 08-08 only covers the breakout path, so mean-        |
+//|  reversion entries had no protection against a too-tight ATR     |
+//|  stop. Added InpMinSLDist: floors the mean-reversion SL distance |
+//|  so a momentarily-tight ATR reading can't produce a stop so      |
+//|  close that ordinary noise clears it in minutes.                 |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "3.84"
+#property version   "3.85"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
