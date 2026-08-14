@@ -298,7 +298,8 @@ void OnTick()
       else if(crossDn && rsi[1]<InpRSImax && !HasSell() && !HasBuy() && !biasBlockSell)
       {
          double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
-         double sl=NormalizeDouble(bid+av*InpSL,_Digits);
+         double slDist=MathMax(av*InpSL,InpMinSLDist);
+         double sl=NormalizeDouble(bid+slDist,_Digits);
          double tp=NormalizeDouble(bid-av*InpTP,_Digits);
          double lots=Lots(sl-bid);
          if(trade.Sell(lots,_Symbol,bid,sl,tp,"NAS_SELL"))
