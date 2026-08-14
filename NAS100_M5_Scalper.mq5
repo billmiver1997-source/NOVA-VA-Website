@@ -73,6 +73,10 @@ input double InpTrailLock    = 0.42;
 input double InpMaxLots      = 0.25;  // hard cap regardless of risk-calc — 2026-08-07 a tight-SL BUY sized
                                        // to 0.21 lots on the same 1% risk and got whipsawed in 32s, so the
                                        // tight stop turned into an oversized loss instead of a small one
+input double InpMinSLDist    = 20.0;  // floor on the mean-reversion SL distance (price units) — 2026-08-13
+                                       // a 12.7pt ATR-based stop got tagged by noise in 3min while three
+                                       // other signals that day sat further out; too-tight stops whipsaw
+                                       // regardless of how clean the K/D cross looked at entry
 
 input group "=== FILTERS ==="
 input double InpMaxSpread  = 200.0;
