@@ -101,6 +101,20 @@ input double InpADXAbsCap    = 50.0;  // hard safety ceiling regardless of the a
 input double InpBreakoutADXMin = 18.0; // min M5 ADX required to trust a breakout signal — 2026-08-06 SELL
                                         // fired at ADX 13.4 vs a 27.0 baseline (no real trend behind the
                                         // break), got run over by a 21h rally and lost -70.76
+input double InpMeanRevADXMin  = 15.0; // same idea, mean-reversion side — 2026-08-17 a SELL fired at ADX
+                                        // 13.7 (near-zero structure, not a real range) and lost -87.19.
+                                        // Kept lower than the breakout floor: mean-reversion wants rangy
+                                        // conditions, not trend, so this only screens out the near-dead
+                                        // readings where the K/D cross isn't measuring anything real.
+
+input group "=== US CASH OPEN AVOIDANCE ==="
+input bool   InpAvoidCashOpen    = true;
+input int    InpCashOpenHourUTC  = 13;   // NYSE/Nasdaq cash open ≈13:30 UTC under EDT (Mar-Nov); shifts to
+                                          // 14:30 UTC under EST — adjust manually across the DST change
+input int    InpCashOpenMinUTC   = 30;
+input int    InpCashOpenBufferMin= 15;   // skip new mean-reversion entries within this many minutes either
+                                          // side of the open — 2026-08-17 a 20pt SL got tagged in 5 SECONDS
+                                          // at exactly 13:30:05 UTC, the opening-bell volatility spike
 
 input group "=== NEWS FILTER ==="
 input bool   InpNewsFilterOn      = true;
