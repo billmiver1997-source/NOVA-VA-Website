@@ -291,6 +291,8 @@ void OnTick()
    bool crossDn = sk[1]<sd[1] && sk[2]>=sd[2] && sk[1]>InpOverbought;
    double adxAvg = AdxBaseline();
    bool trendTooStrong = adx[1] > adxAvg*InpADXRelMult || adx[1] > InpADXAbsCap;
+   bool weakADX = adx[1] < InpMeanRevADXMin;
+   bool cashOpen = NearCashOpen();
    bool newsBlack = NewsBlackout();
    bool biasUp = closeArr[1] > ema[1];
    bool biasBlockBuy  = crossUp && !biasUp;   // dip-buy fighting a downtrend
@@ -301,6 +303,8 @@ void OnTick()
          " ADXavg=",DoubleToString(adxAvg,1)," Bias=",biasUp?"UP":"DN",
          " Cross=",crossUp?"BUY↑":crossDn?"SELL↓":"–",
          trendTooStrong && (crossUp||crossDn) ? " [TREND-SKIP]" : "",
+         weakADX && (crossUp||crossDn) ? " [WEAK-ADX-SKIP]" : "",
+         cashOpen && (crossUp||crossDn) ? " [CASH-OPEN-SKIP]" : "",
          newsBlack && (crossUp||crossDn) ? " [NEWS-BLACKOUT]" : "",
          (biasBlockBuy||biasBlockSell) ? " [BIAS-SKIP]" : "",
          " Day=",dayTrades,"/",InpMaxTrades);
