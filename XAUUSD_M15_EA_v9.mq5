@@ -355,7 +355,7 @@ void OnTick()
                else
                  Print("!!! BREAKOUT BUY FAILED | retcode=",trade.ResultRetcode()," ",trade.ResultRetcodeDescription());
             }
-            else if(breakDir==-1 && wickTouchDn && c1<breakLevel-avH1*InpRejectMargin && c1<c2)
+            else if(breakDir==-1 && wickTouchDn && c1<breakLevel-avH1*InpRejectMargin && c1<c2 && adx[1]>=InpBreakoutADXMin)
             {
                double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
                double sl=NormalizeDouble(breakLevel+avH1*InpBreakoutSL,_Digits);
