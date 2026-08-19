@@ -89,6 +89,11 @@ input int    InpADXPeriod    = 14;
 input int    InpADXAvgPeriod = 30;    // bars used to compute this market's own recent-normal ADX
 input double InpADXRelMult   = 1.4;   // skip when ADX is this many times ABOVE its own recent average
 input double InpADXAbsCap    = 50.0;  // hard safety ceiling regardless of the adaptive baseline
+input double InpBreakoutADXMin = 18.0; // min M15 ADX required to trust a breakout signal — mirrors the
+                                        // NAS100 fix from 2026-08-06 (breakout fired at weak ADX, got run
+                                        // over by a sustained rally)
+input double InpMeanRevADXMin  = 15.0; // same idea, mean-reversion side — mirrors the NAS100 fix from
+                                        // 2026-08-17 (SELL fired at ADX 13.7, near-zero structure)
 
 input group "=== NEWS FILTER ==="
 input bool   InpNewsFilterOn      = true;
