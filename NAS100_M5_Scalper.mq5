@@ -313,7 +313,7 @@ void OnTick()
 
    if(newsBlack) return;
 
-   if(!trendTooStrong)
+   if(!trendTooStrong && !weakADX && !cashOpen)
    {
       if(crossUp && rsi[1]>InpRSImin && !HasBuy() && !HasSell() && !biasBlockBuy)
       {
