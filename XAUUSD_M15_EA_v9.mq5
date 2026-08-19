@@ -258,6 +258,7 @@ void OnTick()
    bool crossDn = sk[1]<sd[1] && sk[2]>=sd[2] && sk[1]>InpOverbought;
    double adxAvg = AdxBaseline();
    bool trendTooStrong = adx[1] > adxAvg*InpADXRelMult || adx[1] > InpADXAbsCap;
+   bool weakADX = adx[1] < InpMeanRevADXMin;
    bool newsBlack = NewsBlackout();
    bool biasUp = closeArr[1] > ema[1];
    bool biasBlockBuy  = crossUp && !biasUp;   // dip-buy fighting a downtrend
@@ -268,6 +269,7 @@ void OnTick()
          " ADXavg=",DoubleToString(adxAvg,1)," Bias=",biasUp?"UP":"DN",
          " Cross=",crossUp?"BUY↑":crossDn?"SELL↓":"–",
          trendTooStrong && (crossUp||crossDn) ? " [TREND-SKIP]" : "",
+         weakADX && (crossUp||crossDn) ? " [WEAK-ADX-SKIP]" : "",
          newsBlack && (crossUp||crossDn) ? " [NEWS-BLACKOUT]" : "",
          (biasBlockBuy||biasBlockSell) ? " [BIAS-SKIP]" : "",
          " Day=",dayTrades,"/",InpMaxTrades);
@@ -276,12 +278,13 @@ void OnTick()
 
    if(newsBlack) return;
 
-   if(!trendTooStrong)
+   if(!trendTooStrong && !weakADX)
    {
       if(crossUp && rsi[1]>InpRSImin && !HasBuy() && !HasSell() && !biasBlockBuy)
       {
          double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
-         double sl=NormalizeDouble(ask-av*InpSL,_Digits);
+         double slDist=MathMax(av*InpSL,InpMinSLDist);
+         double sl=NormalizeDouble(ask-slDist,_Digits);
          double tp=NormalizeDouble(ask+av*InpTP,_Digits);
          double lots=Lots(ask-sl);
          if(trade.Buy(lots,_Symbol,ask,sl,tp,"XAU_BUY"))
