@@ -209,7 +209,7 @@ double Lots(double slD)
    double ts=SymbolInfoDouble(_Symbol,SYMBOL_TRADE_TICK_SIZE);
    double ls=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_STEP);
    double mn=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_MIN);
-   double mx=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_MAX);
+   double mx=MathMin(SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_MAX), InpMaxLots);
    if(ts<=0||tv<=0) return mn;
    double vpl=(slD/ts)*tv; if(vpl<=0) return mn;
    return NormalizeDouble(MathMax(mn,MathMin(mx,MathFloor((risk/vpl)/ls)*ls)),2);
