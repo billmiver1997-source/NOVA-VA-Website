@@ -41,9 +41,18 @@
 //|  1.3x/1.4x ATR (from 1.6x/2.0x) — a closer target lands far more |
 //|  often. 3y backtest: win rate 62.1%, PF 1.06, net +962.90/520    |
 //|  trades, RE-ENABLED live 2026-07-30.                             |
+//|  2026-08-19: this EA had zero protections while its NAS100       |
+//|  sibling picked up several after live losses — ported all four:  |
+//|  InpMaxLots (hard lot ceiling), InpMinSLDist (floors the mean-   |
+//|  reversion SL so a momentarily-tight ATR can't whipsaw in        |
+//|  minutes), InpBreakoutADXMin and InpMeanRevADXMin (both entry    |
+//|  paths now need real structure behind the ADX reading, not just  |
+//|  "not too strong"). Same reasoning as the NAS100 2026-08-08/13/19 |
+//|  fixes; no XAUUSD-specific incident forced each one individually |
+//|  but the failure modes are structurally identical.               |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "9.93"
+#property version   "9.94"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
