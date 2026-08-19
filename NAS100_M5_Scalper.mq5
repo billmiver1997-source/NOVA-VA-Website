@@ -50,9 +50,20 @@
 //|  stop. Added InpMinSLDist: floors the mean-reversion SL distance |
 //|  so a momentarily-tight ATR reading can't produce a stop so      |
 //|  close that ordinary noise clears it in minutes.                 |
+//|  2026-08-19: rough 5-day stretch (6W/8L) diagnosed two more       |
+//|  gaps. (1) A mean-reversion SELL fired at ADX 13.7 (near-zero     |
+//|  structure) and lost -87.19 — added InpMeanRevADXMin, the same    |
+//|  floor idea as InpBreakoutADXMin but tuned lower since mean-      |
+//|  reversion wants rangy conditions, not trend; it only screens     |
+//|  out near-dead readings. (2) A 20pt SL got tagged in 5 SECONDS    |
+//|  at 13:30:05 UTC — exactly the NYSE/Nasdaq opening bell, the      |
+//|  most violent volatility spike of the session. Added             |
+//|  InpAvoidCashOpen: blocks new mean-reversion entries within a     |
+//|  buffer window around the cash open instead of trading straight  |
+//|  through it.                                                     |
 //+------------------------------------------------------------------+
 #property copyright "Trading Nova"
-#property version   "3.85"
+#property version   "3.86"
 #include <Trade\Trade.mqh>
 #include <Trade\PositionInfo.mqh>
 CTrade trade;
