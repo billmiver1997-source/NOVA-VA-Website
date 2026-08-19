@@ -217,6 +217,14 @@ bool NewsBlackout()
    }
    return false;
 }
+bool NearCashOpen()
+{
+   if(!InpAvoidCashOpen) return false;
+   MqlDateTime dt; TimeToStruct(TimeGMT(),dt);
+   int nowMin = dt.hour*60+dt.min;
+   int openMin = InpCashOpenHourUTC*60+InpCashOpenMinUTC;
+   return MathAbs(nowMin-openMin) <= InpCashOpenBufferMin;
+}
 int CountMine()
 {
    int c=0;
