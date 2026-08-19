@@ -69,6 +69,12 @@ input double InpRisk    = 1.0;
 input double InpMaxDD   = 4.0;
 input double InpTrailTrigger = 1.2;
 input double InpTrailLock    = 0.53;
+input double InpMaxLots      = 0.30;  // hard cap regardless of risk-calc — mirrors the NAS100 fix from
+                                       // 2026-08-07; historical XAUUSD size has stayed 0.02-0.14, so this
+                                       // is a safety ceiling, not expected to bind under normal conditions
+input double InpMinSLDist    = 8.0;   // floor on the mean-reversion SL distance (price units) — mirrors
+                                       // the NAS100 fix from 2026-08-13; XAUUSD's tightest live stops have
+                                       // run 5.9-6.7, right where a 1min15s stopout happened on 2026-08-17
 
 input group "=== FILTERS ==="
 input double InpMaxSpread  = 60.0;
